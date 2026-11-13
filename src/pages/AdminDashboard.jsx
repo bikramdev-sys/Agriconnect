@@ -416,121 +416,132 @@ export default function AdminDashboard() {
  return (
  <div className="h-screen w-screen flex overflow-hidden bg-[#0A140F] text-slate-100 font-sans">
  
- {/* ===================== SIDEBAR (DESKTOP & MOBILE DRAWER) ===================== */}
- <aside 
- className={`fixed inset-y-0 left-0 z-40 w-72 bg-[#06110B] border-r border-emerald-950/80 flex flex-col justify-between transition-transform duration-300 ease-in-out lg:static lg:translate-x-0 ${
- mobileSidebarOpen ? 'translate-x-0 shadow-2xl' : '-translate-x-full'
- }`}
- >
- {/* Top Header in Sidebar */}
- <div className="flex flex-col">
- <div className="p-6 border-b border-emerald-950/60 flex items-center justify-between">
- <div className="flex items-center space-x-3">
- <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-emerald-500 to-forest-700 flex items-center justify-center text-white shadow-md shadow-emerald-950">
- <ShieldCheck className="w-6 h-6 text-white" />
- </div>
- <div>
- <h1 className="font-display font-extrabold text-sm text-white tracking-tight flex items-center gap-1.5">
- <span>AgriConnect</span>
- <span className="px-1.5 py-0.2 rounded text-[9px] font-mono font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
- CONSOLE
- </span>
- </h1>
- <p className="text-[11px] text-emerald-400/80 font-mono flex items-center gap-1 mt-0.5">
- <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
- <span>Atlas v8 Operational</span>
- </p>
- </div>
- </div>
+  {/* ===================== SIDEBAR (DESKTOP & MOBILE DRAWER) ===================== */}
+  <aside 
+    className={`fixed inset-y-0 left-0 z-40 w-72 bg-[#09150E] border-r border-emerald-900/30 flex flex-col justify-between transition-transform duration-300 ease-in-out lg:static lg:translate-x-0 ${
+      mobileSidebarOpen ? 'translate-x-0 shadow-2xl' : '-translate-x-full'
+    }`}
+  >
+    {/* Top Header & Navigation Section */}
+    <div className="flex flex-col">
+      {/* Top Brand Header */}
+      <div className="p-5 border-b border-emerald-900/25 flex items-center justify-between">
+        <div className="flex items-center space-x-3">
+          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500 to-forest-700 flex items-center justify-center text-white shadow-md shadow-emerald-950/60 ring-1 ring-emerald-400/30">
+            <ShieldCheck className="w-5 h-5 text-white" />
+          </div>
+          <div>
+            <div className="flex items-center gap-1.5">
+              <h1 className="font-display font-extrabold text-sm text-white tracking-tight">
+                AgriConnect
+              </h1>
+              <span className="px-1.5 py-0.5 rounded text-[9px] font-semibold bg-emerald-500/15 text-emerald-300 border border-emerald-500/25 tracking-wide">
+                ADMIN
+              </span>
+            </div>
+            <p className="text-[11px] text-emerald-400/80 font-medium flex items-center gap-1.5 mt-0.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+              <span>MongoDB Atlas Live</span>
+            </p>
+          </div>
+        </div>
 
- <button
- onClick={() => setMobileSidebarOpen(false)}
- className="lg:hidden p-1.5 rounded-xl text-gray-400 hover:text-white hover:bg-white/5"
- >
- <X className="w-5 h-5" />
- </button>
- </div>
+        <button
+          onClick={() => setMobileSidebarOpen(false)}
+          className="lg:hidden p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-white/5"
+        >
+          <X className="w-5 h-5" />
+        </button>
+      </div>
 
- {/* Admin Identity Snippet */}
- <div className="p-4 mx-3 my-4 rounded-2xl bg-[#0B1E13] border border-emerald-500/20 flex items-center space-x-3 shadow-xs">
- <img
- src={user?.avatar || 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=200&q=80'}
- alt={user?.name || 'Administrator'}
- className="w-11 h-11 rounded-xl object-cover border border-emerald-400/40 shadow-xs"
- />
- <div className="min-w-0 flex-1">
- <div className="flex items-center justify-between">
- <p className="text-xs font-bold text-white truncate">{user?.name || 'Bikram Dev'}</p>
- <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-emerald-900/60 text-emerald-300 font-bold">
- ROOT
- </span>
- </div>
- <p className="text-[10px] text-emerald-400/80 truncate font-mono">{user?.email || 'admin@agriconnect.org'}</p>
- <p className="text-[10px] text-gray-400 mt-0.5">National Directorate</p>
- </div>
- </div>
+      {/* Admin Identity Card */}
+      <div className="p-3.5 mx-3.5 my-3.5 rounded-xl bg-white/[0.03] hover:bg-white/[0.05] border border-white/[0.06] flex items-center space-x-3 transition-colors shadow-2xs">
+        <div className="relative shrink-0">
+          <img
+            src={user?.avatar || 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=200&q=80'}
+            alt={user?.name || 'Administrator'}
+            className="w-10 h-10 rounded-lg object-cover ring-1 ring-emerald-500/30"
+          />
+          <span className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-emerald-400 ring-2 ring-[#09150E]" />
+        </div>
+        <div className="min-w-0 flex-1">
+          <div className="flex items-center justify-between">
+            <p className="text-xs font-semibold text-white truncate">{user?.name || 'Bikram Dev'}</p>
+            <span className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-emerald-500/15 text-emerald-300 border border-emerald-500/25">
+              ROOT
+            </span>
+          </div>
+          <p className="text-[11px] text-slate-400 truncate mt-0.5 font-sans">{user?.email || 'admin@agriconnect.org'}</p>
+          <p className="text-[10px] text-emerald-400/70 font-medium mt-0.5">National Directorate</p>
+        </div>
+      </div>
 
- {/* Navigation Links */}
- <nav className="px-3 space-y-1">
- {navMenuItems.map((item) => {
- const Icon = item.icon;
- const isActive = activeTab === item.id;
- return (
- <button
- key={item.id}
- onClick={() => {
- setActiveTab(item.id);
- setMobileSidebarOpen(false);
- }}
- className={`w-full flex items-center justify-between px-3.5 py-3 rounded-2xl font-bold text-xs transition-all text-left ${
- isActive
- ? 'bg-gradient-to-r from-emerald-600 to-forest-700 text-white shadow-lg shadow-emerald-950/60'
- : 'text-gray-300 hover:text-white hover:bg-white/5'
- }`}
- >
- <div className="flex items-center space-x-3">
- <Icon className={`w-4 h-4 ${isActive ? 'text-white' : 'text-emerald-400'}`} />
- <span>{item.label}</span>
- </div>
- {item.badge !== null && (
- <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
- isActive 
- ? 'bg-white/20 text-white' 
- : item.urgent 
- ? 'bg-amber-500/25 text-amber-300 border border-amber-500/50 animate-pulse font-extrabold'
- : 'bg-emerald-950 text-emerald-300 border border-emerald-800/40'
- }`}>
- {item.urgent && item.urgentText ? item.urgentText : item.badge}
- </span>
- )}
- </button>
- );
- })}
- </nav>
- </div>
+      {/* Navigation Links */}
+      <nav className="px-3 space-y-1">
+        {navMenuItems.map((item) => {
+          const Icon = item.icon;
+          const isActive = activeTab === item.id;
+          return (
+            <button
+              key={item.id}
+              onClick={() => {
+                setActiveTab(item.id);
+                setMobileSidebarOpen(false);
+              }}
+              className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl font-medium text-xs transition-all text-left group ${
+                isActive
+                  ? 'bg-emerald-600 text-white shadow-md shadow-emerald-950/50 font-semibold'
+                  : 'text-slate-300 hover:text-white hover:bg-white/[0.04]'
+              }`}
+            >
+              <div className="flex items-center space-x-3">
+                <Icon className={`w-4 h-4 transition-colors ${isActive ? 'text-white' : 'text-emerald-400/70 group-hover:text-emerald-300'}`} />
+                <span>{item.label}</span>
+              </div>
+              {item.badge !== null && (
+                <span className={`px-2 py-0.5 rounded-full text-[10px] font-semibold transition-colors ${
+                  isActive 
+                    ? 'bg-white/20 text-white' 
+                    : item.urgent 
+                    ? 'bg-amber-500/15 text-amber-300 border border-amber-500/30 font-bold'
+                    : 'bg-white/[0.06] text-slate-300 border border-white/[0.06]'
+                }`}>
+                  {item.urgent && item.urgentText ? item.urgentText : item.badge}
+                </span>
+              )}
+            </button>
+          );
+        })}
+      </nav>
+    </div>
 
- {/* Sidebar Footer Controls */}
- <div className="p-4 border-t border-emerald-950/80 space-y-2">
- <Link
- to="/marketplace"
- className="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-semibold text-gray-300 hover:text-white hover:bg-white/5 transition-colors border border-emerald-900/30"
- >
- <div className="flex items-center space-x-2">
- <Store className="w-3.5 h-3.5 text-emerald-400" />
- <span>View Public Marketplace</span>
- </div>
- <ExternalLink className="w-3.5 h-3.5 text-gray-400" />
- </Link>
+    {/* Sidebar Footer Controls */}
+    <div className="p-3.5 border-t border-emerald-900/25 space-y-2">
+      <Link
+        to="/marketplace"
+        className="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-medium text-slate-200 hover:text-white bg-white/[0.03] hover:bg-emerald-500/10 border border-white/[0.06] hover:border-emerald-500/30 transition-all group shadow-2xs"
+      >
+        <div className="flex items-center space-x-2.5">
+          <Store className="w-4 h-4 text-emerald-400 group-hover:scale-110 transition-transform" />
+          <span>View Public Marketplace</span>
+        </div>
+        <ExternalLink className="w-3.5 h-3.5 text-slate-400 group-hover:text-emerald-300 transition-colors" />
+      </Link>
 
- <button
- onClick={logout}
- className="w-full flex items-center space-x-2 px-3.5 py-2.5 rounded-xl text-xs font-bold text-red-400 hover:text-red-300 hover:bg-red-950/40 border border-red-900/30 transition-colors"
- >
- <LogOut className="w-4 h-4 text-red-400" />
- <span>Terminate Admin Session</span>
- </button>
- </div>
- </aside>
+      <button
+        onClick={logout}
+        className="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-medium text-rose-300 hover:text-rose-100 bg-rose-500/[0.08] hover:bg-rose-500/[0.18] border border-rose-500/20 hover:border-rose-500/40 transition-all group shadow-2xs"
+      >
+        <div className="flex items-center space-x-2.5">
+          <LogOut className="w-4 h-4 text-rose-400 group-hover:-translate-x-0.5 transition-transform" />
+          <span>Terminate Admin Session</span>
+        </div>
+        <span className="text-[10px] font-semibold px-1.5 py-0.5 rounded bg-rose-500/20 text-rose-300 group-hover:bg-rose-500/30 transition-colors">
+          Exit
+        </span>
+      </button>
+    </div>
+  </aside>
 
  {/* Mobile Backdrop */}
  {mobileSidebarOpen && (
