@@ -15,13 +15,15 @@ import {
   Truck,
   Leaf,
   Check,
-  ShieldAlert
+  ShieldAlert,
+  AlertCircle
 } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
 import { farmers } from '../data/farmers';
 import ProductCard from '../components/ProductCard';
 import ContactFarmerModal from '../components/ContactFarmerModal';
+import { CANONICAL_FARMER_AVATARS, getCartoonAvatar } from '../utils/avatar';
 
 export default function ProductDetails() {
   const { id } = useParams();
@@ -36,23 +38,28 @@ export default function ProductDetails() {
     name: product?.farmerName || 'Verified Local Farmer',
     farmName: 'Organic Soil Producer',
     location: product?.location || 'Nashik, Maharashtra',
-    avatar: product?.farmerAvatar || 'https://images.unsplash.com/photo-1595273670150-bd0c3c392e46?auto=format&fit=crop&w=200&q=80',
+    avatar: CANONICAL_FARMER_AVATARS[product?.farmerName] || product?.farmerAvatar || '/avatars/ramesh-patel.jpg',
     rating: 4.9,
     reviewsCount: 120,
     bio: 'Dedicated to chemical-free agriculture, natural pest control, and fair customer pricing.'
   };
 
+  const farmerAvatarSrc = CANONICAL_FARMER_AVATARS[farmer.name] || CANONICAL_FARMER_AVATARS[product?.farmerName] || farmer.avatar || getCartoonAvatar(farmer.name);
+
   const [quantity, setQuantity] = useState(1);
   const [activeImage, setActiveImage] = useState(product?.image);
   const [contactModalOpen, setContactModalOpen] = useState(false);
 
+  const maxAvailable = Number(product?.availableQuantity) || 0;
+  const isOutOfStock = !product?.isAvailable || maxAvailable <= 0;
+
   useEffect(() => {
     if (product) {
       setActiveImage(product.image);
-      setQuantity(product.minOrderQty || 1);
+      setQuantity(isOutOfStock ? 0 : Math.min(product.minOrderQty || 1, maxAvailable));
       window.scrollTo(0, 0);
     }
-  }, [id, product]);
+  }, [id, product, isOutOfStock, maxAvailable]);
 
   if (!product) {
     return (
@@ -66,7 +73,6 @@ export default function ProductDetails() {
   }
 
   const favorited = isFavorite(product.id);
-  const maxAvailable = product.availableQuantity || 0;
 
   const handleIncrement = () => {
     if (quantity < maxAvailable) {
@@ -186,16 +192,19 @@ export default function ProductDetails() {
                 <div className="flex items-center justify-between p-3.5 rounded-2xl bg-cream/70 border border-forest-100/90 mb-6">
                   <div className="flex items-center space-x-3">
                     <img
-                      src={farmer.avatar}
+                      src={farmerAvatarSrc}
                       alt={farmer.name}
-                      className="w-11 h-11 rounded-xl object-cover border border-forest-200"
+                      onError={(e) => {
+                        e.currentTarget.src = getCartoonAvatar(farmer.name);
+                      }}
+                      className="w-11 h-11 rounded-xl object-cover border border-forest-200 shrink-0"
                     />
                     <div>
                       <h4 className="font-display font-bold text-sm text-forest-950">
                         {farmer.name}
                       </h4>
                       <p className="text-xs text-agriText-muted flex items-center">
-                        <MapPin className="w-3 h-3 text-forest-600 mr-1" />
+                        <MapPin className="w-3 h-3 text-forest-600 mr-1 shrink-0" />
                         {farmer.farmName || product.location}
                       </p>
                     </div>
@@ -243,6 +252,28 @@ export default function ProductDetails() {
                     </div>
                   </div>
                 </div>
+
+                {/* Real-time Stock Availability Banner */}
+                {isOutOfStock ? (
+                  <div className="p-4 rounded-2xl bg-red-50 border border-red-200 text-red-900 flex items-start space-x-3 mb-6 shadow-xs">
+                    <AlertCircle className="w-5 h-5 text-red-600 shrink-0 mt-0.5" />
+                    <div>
+                      <p className="font-bold text-sm text-red-950">Currently Out of Stock</p>
+                      <p className="text-xs text-red-800 mt-0.5 leading-relaxed">
+                        All harvest of this produce has been ordered. The farmer will list a fresh batch upon the next picking cycle.
+                      </p>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="flex items-center space-x-2.5 p-3 rounded-2xl bg-forest-50/70 border border-forest-100 mb-6">
+                    <span className={`w-2.5 h-2.5 rounded-full shrink-0 ${maxAvailable <= 10 ? 'bg-amber-500 animate-pulse' : 'bg-fresh'}`} />
+                    <span className={`text-xs font-bold ${maxAvailable <= 10 ? 'text-amber-900' : 'text-forest-900'}`}>
+                      {maxAvailable <= 10
+                        ? `⚠️ Hurry, only ${maxAvailable} ${product.unit} remaining in current harvest!`
+                        : `✅ In Stock: ${maxAvailable} ${product.unit} available for immediate direct delivery`}
+                    </span>
+                  </div>
+                )}
               </div>
 
               {/* Purchase Actions & Quantity Selector */}
@@ -266,6 +297,19 @@ export default function ProductDetails() {
                     >
                       Manage in Control Center →
                     </Link>
+                  </div>
+                ) : isOutOfStock ? (
+                  <div className="space-y-3 pt-2">
+                    <button
+                      disabled
+                      className="w-full py-4 rounded-2xl bg-gray-100 text-gray-400 font-extrabold text-sm border border-gray-200 cursor-not-allowed flex items-center justify-center space-x-2 shadow-xs"
+                    >
+                      <AlertCircle className="w-4 h-4 text-gray-400" />
+                      <span>Out of Stock — Sold Out</span>
+                    </button>
+                    <p className="text-xs text-center text-agriText-muted">
+                      Need updates? Use <strong>"Contact Farmer"</strong> above to inquire about the next harvest date.
+                    </p>
                   </div>
                 ) : (
                   <>

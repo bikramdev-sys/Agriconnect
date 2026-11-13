@@ -136,31 +136,31 @@ export default function ForFarmers() {
 
   const farmerStories = [
     {
-      name: 'Rameshwar Patil',
-      farm: 'Patil Agro Orchards',
+      name: 'Ramesh Patel',
+      farm: 'Patel Organic Farms',
       location: 'Nashik, Maharashtra',
       crops: 'Grapes & Pomegranates',
       quote: 'Before AgriConnect, we had to dump excess produce at the APMC yard for whatever price brokers dictated. Now I set my rate 3 weeks before harvest, and Mumbai gourmet stores buy every crate.',
       extraIncome: '+₹2,85,000 / season',
-      avatar: 'https://images.unsplash.com/photo-1595475207225-428b62bda831?auto=format&fit=crop&w=400&q=80'
+      avatar: '/avatars/ramesh-patel.jpg'
     },
     {
       name: 'Gurpreet Singh',
-      farm: 'Golden Grain Fields',
+      farm: 'Golden Fields Estate',
       location: 'Ludhiana, Punjab',
       crops: 'Certified Organic Wheat & Basmati',
       quote: 'Direct connection with retail grocers in Delhi eliminated 4 middlemen tiers. Payment reflects in my bank account on the exact day of pickup. No tension, only growth.',
       extraIncome: '+₹3,40,000 / crop cycle',
-      avatar: 'https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?auto=format&fit=crop&w=400&q=80'
+      avatar: '/avatars/gurpreet-singh.jpg'
     },
     {
-      name: 'Lakshmi Narayanan',
-      farm: 'Nilgiri Heritage Farms',
-      location: 'Ooty, Tamil Nadu',
-      crops: 'Cold-Climate Carrots & Broccoli',
+      name: 'Lakshmi Devi',
+      farm: 'Annapurna Valley Farms',
+      location: 'Shimla, Himachal Pradesh',
+      crops: 'Cold-Climate Carrots & Apples',
       quote: 'The price radar tool gave me the confidence to reject undervalued broker bids. We now supply 15 restaurant groups in Bengaluru with predictable weekly contracts.',
       extraIncome: '+₹1,95,000 / month',
-      avatar: 'https://images.unsplash.com/photo-1567427017947-545c5f8d16ad?auto=format&fit=crop&w=400&q=80'
+      avatar: '/avatars/lakshmi-devi.jpg'
     }
   ];
 

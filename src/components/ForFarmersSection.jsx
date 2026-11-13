@@ -108,23 +108,30 @@ export default function ForFarmersSection() {
           >
             <div className="relative rounded-3xl overflow-hidden border border-forest-800 shadow-2xl">
               <img
-                src="https://images.unsplash.com/photo-1595475207225-428b62bda831?auto=format&fit=crop&w=800&q=80"
-                alt="Farmer harvesting fresh crops"
+                src="https://images.unsplash.com/photo-1500937386664-56d1dfef3854?auto=format&fit=crop&w=800&q=80"
+                alt="Lush green organic farmland in India"
                 className="w-full h-[440px] object-cover"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-forest-950 via-forest-950/40 to-transparent" />
 
-              {/* Floating Testimonial Snippet Card */}
+              {/* Floating Testimonial Snippet Card with Canonical Avatar */}
               <div className="absolute bottom-6 left-6 right-6 p-4 rounded-2xl bg-forest-900/90 backdrop-blur-md border border-forest-700/80 shadow-lg">
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-xs font-bold text-white">Active Farm Partner</span>
+                  <div className="flex items-center space-x-2.5">
+                    <img
+                      src="/avatars/ramesh-patel.jpg"
+                      alt="Ramesh Patel"
+                      className="w-9 h-9 rounded-full object-cover border border-fresh/40 shadow-xs"
+                    />
+                    <div>
+                      <span className="text-xs font-bold text-white block">Ramesh Patel</span>
+                      <span className="text-[10px] text-fresh font-medium">Patel Organic Farms, Nashik</span>
+                    </div>
+                  </div>
                   <span className="text-[11px] font-semibold text-accent-yellow">★★★★★ 4.95</span>
                 </div>
-                <p className="text-xs text-gray-200 italic mb-2">
+                <p className="text-xs text-gray-200 italic">
                   "AgriConnect helped our organic farm supply over 2,400 kg of fresh tomatoes directly without giving up 35% margin to brokers."
-                </p>
-                <p className="text-xs font-bold text-white">
-                  Ramesh Patel <span className="text-gray-400 font-normal">— Patel Farms, Nashik</span>
                 </p>
               </div>
             </div>

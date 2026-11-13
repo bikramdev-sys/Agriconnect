@@ -34,7 +34,7 @@ const productSchema = new mongoose.Schema(
     },
     farmerAvatar: {
       type: String,
-      default: 'https://images.unsplash.com/photo-1595273670150-bd0c3c392e46?auto=format&fit=crop&w=200&q=80',
+      default: '/avatars/ramesh-patel.jpg',
     },
     location: {
       type: String,

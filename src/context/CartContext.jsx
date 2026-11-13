@@ -5,10 +5,31 @@ import { initialProducts } from '../data/products';
 import { farmers as initialFarmers } from '../data/farmers';
 import { api } from '../services/api';
 import { useAuth } from './AuthContext';
+import { CANONICAL_FARMER_AVATARS, getCartoonAvatar } from '../utils/avatar';
 
 const CartContext = createContext();
 
 const INITIAL_ORDERS = [];
+
+// Helper normalizers to guarantee 1-to-1 canonical avatar consistency
+const normalizeProduct = (prod) => {
+  const canonicalAvatar = CANONICAL_FARMER_AVATARS[prod.farmerName];
+  const qty = Number(prod.availableQuantity) >= 0 ? Number(prod.availableQuantity) : 0;
+  return {
+    ...prod,
+    availableQuantity: qty,
+    isAvailable: qty > 0,
+    farmerAvatar: canonicalAvatar || prod.farmerAvatar || getCartoonAvatar(prod.farmerName)
+  };
+};
+
+const normalizeFarmer = (farmer) => {
+  const canonicalAvatar = CANONICAL_FARMER_AVATARS[farmer.name];
+  return {
+    ...farmer,
+    avatar: canonicalAvatar || farmer.avatar || getCartoonAvatar(farmer.name)
+  };
+};
 
 export function CartProvider({ children }) {
   const { user } = useAuth();
@@ -16,9 +37,10 @@ export function CartProvider({ children }) {
   const [products, setProducts] = useState(() => {
     try {
       const saved = localStorage.getItem('agriconnect_products');
-      return saved ? JSON.parse(saved) : initialProducts;
+      const list = saved ? JSON.parse(saved) : initialProducts;
+      return list.map(normalizeProduct);
     } catch {
-      return initialProducts;
+      return initialProducts.map(normalizeProduct);
     }
   });
 
@@ -26,9 +48,10 @@ export function CartProvider({ children }) {
   const [farmersList, setFarmersList] = useState(() => {
     try {
       const saved = localStorage.getItem('agriconnect_farmers');
-      return saved ? JSON.parse(saved) : initialFarmers;
+      const list = saved ? JSON.parse(saved) : initialFarmers;
+      return list.map(normalizeFarmer);
     } catch {
-      return initialFarmers;
+      return initialFarmers.map(normalizeFarmer);
     }
   });
 
@@ -75,7 +98,7 @@ export function CartProvider({ children }) {
     try {
       const prodRes = await api.products.getAll();
       if (Array.isArray(prodRes?.products)) {
-        setProducts(prodRes.products);
+        setProducts(prodRes.products.map(normalizeProduct));
       }
     } catch (e) {
       // use local
@@ -84,7 +107,7 @@ export function CartProvider({ children }) {
     try {
       const farmRes = await api.farmers.getAll();
       if (Array.isArray(farmRes?.farmers)) {
-        setFarmersList(farmRes.farmers);
+        setFarmersList(farmRes.farmers.map(normalizeFarmer));
       }
     } catch (e) {
       // use local
@@ -175,12 +198,20 @@ export function CartProvider({ children }) {
       return false;
     }
 
+    const currentLiveProd = products.find((p) => p.id === product.id) || product;
+    const availableStock = Number(currentLiveProd.availableQuantity) || 0;
+
+    if (availableStock <= 0 || !currentLiveProd.isAvailable) {
+      toast.error(`${product.name} is currently out of stock!`, { icon: '⚠️' });
+      return false;
+    }
+
     const existing = cartItems.find((item) => item.id === product.id);
     const currentQtyInCart = existing ? existing.quantity : 0;
     const targetQty = currentQtyInCart + quantity;
 
-    if (targetQty > product.availableQuantity) {
-      toast.error(`Only ${product.availableQuantity} ${product.unit} available from this farm!`);
+    if (targetQty > availableStock) {
+      toast.error(`Only ${availableStock} ${product.unit} available in current harvest stock!`);
       return false;
     }
 
@@ -205,7 +236,7 @@ export function CartProvider({ children }) {
           farmerName: product.farmerName,
           location: product.location,
           isOrganic: product.isOrganic,
-          availableQuantity: product.availableQuantity,
+          availableQuantity: availableStock,
           quantity: quantity
         }
       ];
@@ -271,14 +302,29 @@ export function CartProvider({ children }) {
 
   // Create Order
   const createOrder = (orderDetails) => {
+    if (!cartItems.length) {
+      toast.error('Your cart is currently empty!');
+      return null;
+    }
+
+    // Verify stock availability
+    for (const item of cartItems) {
+      const liveProd = products.find((p) => p.id === item.id);
+      const stock = liveProd ? (Number(liveProd.availableQuantity) || 0) : 0;
+      if (stock < item.quantity) {
+        toast.error(`Insufficient stock for ${item.name}! Only ${stock} ${item.unit} available.`);
+        return null;
+      }
+    }
+
     const newOrderId = `ORD-${Math.floor(1000 + Math.random() * 9000)}`;
     const firstItem = cartItems[0] || {};
     const newOrder = {
       id: newOrderId,
       date: new Date().toISOString().split('T')[0],
-      customerName: orderDetails.customerName || 'AgriConnect Buyer',
-      customerEmail: orderDetails.customerEmail || 'buyer@example.com',
-      customerPhone: orderDetails.customerPhone || '+91 98765 43210',
+      customerName: orderDetails.customerName || (user ? user.name : 'AgriConnect Buyer'),
+      customerEmail: orderDetails.customerEmail || (user ? user.email : 'buyer@example.com'),
+      customerPhone: orderDetails.customerPhone || (user ? user.phone : '+91 98765 43210'),
       shippingAddress: orderDetails.address || 'Standard Delivery Address',
       farmerId: orderDetails.farmerId || firstItem.farmerId || '',
       farmerName: orderDetails.farmerName || firstItem.farmerName || '',
@@ -291,11 +337,13 @@ export function CartProvider({ children }) {
       paymentMethod: orderDetails.paymentMethod || 'Direct Farm Pay (COD / UPI)'
     };
 
+    // Deduct stock in real-time across the application
     setProducts((prev) =>
       prev.map((prod) => {
         const cartItem = cartItems.find((item) => item.id === prod.id);
         if (cartItem) {
-          const remaining = Math.max(0, prod.availableQuantity - cartItem.quantity);
+          const currentQty = Number(prod.availableQuantity) || 0;
+          const remaining = Math.max(0, currentQty - Number(cartItem.quantity));
           return {
             ...prod,
             availableQuantity: remaining,
@@ -331,13 +379,40 @@ export function CartProvider({ children }) {
 
   // Order status actions (accessible by farmer and admin)
   const updateOrderStatus = (orderId, newStatus) => {
+    const orderToUpdate = orders.find((o) => o.id === orderId);
+    const oldStatus = orderToUpdate?.status;
+
     setOrders((prev) =>
       prev.map((ord) =>
         ord.id === orderId ? { ...ord, status: newStatus } : ord
       )
     );
+
+    if (newStatus === 'Rejected' && oldStatus !== 'Rejected' && orderToUpdate?.items) {
+      // Replenish stock in real time
+      setProducts((prev) =>
+        prev.map((prod) => {
+          const item = orderToUpdate.items.find((i) => i.id === prod.id);
+          if (item) {
+            const currentQty = Number(prod.availableQuantity) || 0;
+            const restored = currentQty + Number(item.quantity);
+            return {
+              ...prod,
+              availableQuantity: restored,
+              isAvailable: true
+            };
+          }
+          return prod;
+        })
+      );
+      toast(`Order #${orderId} declined. Harvest stock replenished.`, { icon: '📦' });
+    } else if (newStatus === 'Accepted') {
+      toast.success(`Order #${orderId} accepted and harvest batch reserved!`);
+    } else {
+      toast.success(`Order #${orderId} status set to: ${newStatus}`);
+    }
+
     api.orders.updateStatus(orderId, newStatus).catch(() => {});
-    toast.success(`Order ${orderId} status set to: ${newStatus}`);
   };
 
   // Farmer / Admin Product CRUD
@@ -351,7 +426,7 @@ export function CartProvider({ children }) {
       unit: newProdData.unit || 'kg',
       farmerId: newProdData.farmerId || 'farmer-1',
       farmerName: newProdData.farmerName || 'Ramesh Patel',
-      farmerAvatar: newProdData.farmerAvatar || 'https://images.unsplash.com/photo-1595475207225-428b62bda831?auto=format&fit=crop&w=150&q=80',
+      farmerAvatar: CANONICAL_FARMER_AVATARS[newProdData.farmerName] || newProdData.farmerAvatar || getCartoonAvatar(newProdData.farmerName),
       location: newProdData.location || 'Nashik, Maharashtra',
       state: newProdData.state || 'Maharashtra',
       isOrganic: Boolean(newProdData.isOrganic),

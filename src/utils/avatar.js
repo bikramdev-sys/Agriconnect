@@ -1,5 +1,5 @@
 // Centralized Avatar Utility for AgriConnect
-// Provides cartoon avatars (DiceBear Adventurer) and authentic Indian farmer defaults
+// Provides cartoon avatars (DiceBear Adventurer) and canonical verified Indian farmer portraits
 
 /**
  * Returns a personalized cartoon avatar URL.
@@ -12,25 +12,46 @@ export function getCartoonAvatar(name = 'User', role = 'farmer') {
 }
 
 /**
- * Curated authentic Indian farmer portraits from Unsplash
+ * Canonical 1-to-1 Farmer Avatar Mappings.
+ * Guarantees every person has ONE and ONLY ONE consistent profile photo across the entire site.
+ */
+export const CANONICAL_FARMER_AVATARS = {
+  'Ramesh Patel': '/avatars/ramesh-patel.jpg',
+  'Rameshwar Patil': '/avatars/ramesh-patel.jpg',
+  'Lakshmi Devi': '/avatars/lakshmi-devi.jpg',
+  'Lakshmi Narayanan': '/avatars/lakshmi-devi.jpg',
+  'Gurpreet Singh': '/avatars/gurpreet-singh.jpg',
+  'Suresh Kumar': '/avatars/suresh-kumar.jpg',
+  'Ananya Sharma': '/avatars/ananya-sharma.jpg',
+};
+
+/**
+ * Curated authentic Indian farmer portraits
  */
 export const INDIAN_FARMER_PHOTOS = [
-  'https://images.unsplash.com/photo-1595475207225-428b62bda831?auto=format&fit=crop&w=400&q=80', // Indian farmer with turban in mustard field
-  'https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?auto=format&fit=crop&w=400&q=80', // Smiling Indian farmer in lush green farm
-  'https://images.unsplash.com/photo-1567427017947-545c5f8d16ad?auto=format&fit=crop&w=400&q=80', // Indian woman farmer in traditional attire
-  'https://images.unsplash.com/photo-1506869640319-fe1a24fd76dc?auto=format&fit=crop&w=400&q=80', // Elderly Indian farmer with white mustache and turban
-  'https://images.unsplash.com/photo-1615811361523-6bd03d7748e7?auto=format&fit=crop&w=400&q=80', // Indian agriculturalist in organic farm
+  '/avatars/ramesh-patel.jpg',
+  '/avatars/lakshmi-devi.jpg',
+  '/avatars/gurpreet-singh.jpg',
+  '/avatars/suresh-kumar.jpg',
+  '/avatars/ananya-sharma.jpg',
 ];
 
 /**
  * Returns a valid avatar for a user:
- * 1. Their custom uploaded photo or non-western avatar if present.
- * 2. If it was an old placeholder or empty, returns a friendly cartoon avatar.
+ * 1. Checks canonical farmer mapping by name.
+ * 2. Checks custom uploaded photo or non-western avatar if present.
+ * 3. Falls back to consistent cartoon avatar.
  */
 export function getUserAvatar(user, fallbackRole = 'farmer') {
+  const name = user?.name || (typeof user === 'string' ? user : '');
+
+  if (name && CANONICAL_FARMER_AVATARS[name]) {
+    return CANONICAL_FARMER_AVATARS[name];
+  }
+
   if (user?.avatar && typeof user.avatar === 'string' && user.avatar.trim()) {
     const av = user.avatar.trim();
-    // Replace old western placeholders with cartoon avatar
+    // Replace old western placeholders or legacy misidentified photos
     if (
       av.includes('photo-1595273670150-bd0c3c392e46') || 
       av.includes('photo-1534528741775-53994a69daeb') ||
@@ -38,12 +59,18 @@ export function getUserAvatar(user, fallbackRole = 'farmer') {
       av.includes('photo-1507003211169-0a1dd7228f2d') ||
       av.includes('photo-1544005313-94ddf0286df2') ||
       av.includes('photo-1500648767791-00dcc994a43e') ||
-      av.includes('photo-1573496359142-b8d87734a5a2')
+      av.includes('photo-1573496359142-b8d87734a5a2') ||
+      av.includes('photo-1595475207225-428b62bda831') ||
+      av.includes('photo-1567427017947-545c5f8d16ad') ||
+      av.includes('photo-1607604276583-eef5d076aa5f')
     ) {
-      return getCartoonAvatar(user.name || 'AgriUser', user.role || fallbackRole);
+      if (name && CANONICAL_FARMER_AVATARS[name]) {
+        return CANONICAL_FARMER_AVATARS[name];
+      }
+      return getCartoonAvatar(name || 'AgriUser', user.role || fallbackRole);
     }
     return av;
   }
-  return getCartoonAvatar(user?.name || 'AgriUser', user?.role || fallbackRole);
-}
 
+  return getCartoonAvatar(name || 'AgriUser', user?.role || fallbackRole);
+}

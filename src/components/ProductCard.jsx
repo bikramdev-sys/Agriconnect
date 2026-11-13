@@ -1,15 +1,20 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Heart, Plus, MapPin, Sparkles, Check, ShoppingBag, Eye } from 'lucide-react';
+import { Heart, Plus, MapPin, Sparkles, Check, ShoppingBag, Eye, AlertCircle } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
+import { CANONICAL_FARMER_AVATARS, getCartoonAvatar } from '../utils/avatar';
 
 export default function ProductCard({ product }) {
   const navigate = useNavigate();
   const { addToCart, isFavorite, toggleFavorite } = useCart();
   const { isAdmin } = useAuth();
   const favorited = isFavorite(product.id);
+
+  const availableQty = Number(product.availableQuantity) || 0;
+  const isOutOfStock = !product.isAvailable || availableQty <= 0;
+  const farmerAvatarSrc = CANONICAL_FARMER_AVATARS[product.farmerName] || product.farmerAvatar || getCartoonAvatar(product.farmerName);
 
   const handleCardClick = (e) => {
     // Avoid triggering when clicking buttons
@@ -19,6 +24,7 @@ export default function ProductCard({ product }) {
 
   const handleAddToCart = (e) => {
     e.stopPropagation();
+    if (isOutOfStock) return;
     addToCart(product, 1);
   };
 
@@ -36,7 +42,9 @@ export default function ProductCard({ product }) {
       whileHover={{ y: -6 }}
       transition={{ duration: 0.25 }}
       onClick={handleCardClick}
-      className="group bg-white rounded-3xl overflow-hidden border border-forest-100/80 shadow-soft hover:shadow-premium transition-all duration-300 flex flex-col cursor-pointer"
+      className={`group bg-white rounded-3xl overflow-hidden border border-forest-100/80 shadow-soft hover:shadow-premium transition-all duration-300 flex flex-col cursor-pointer ${
+        isOutOfStock ? 'opacity-90' : ''
+      }`}
     >
       {/* Top Image Container */}
       <div className="relative aspect-[4/3] w-full overflow-hidden bg-forest-50">
@@ -44,14 +52,25 @@ export default function ProductCard({ product }) {
           src={product.image}
           alt={product.name}
           loading="lazy"
-          className="w-full h-full object-cover group-hover:scale-108 transition-transform duration-500 ease-out"
+          className={`w-full h-full object-cover transition-transform duration-500 ease-out ${
+            isOutOfStock ? 'grayscale-[35%]' : 'group-hover:scale-108'
+          }`}
         />
 
         {/* Gradient Overlay for contrast */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-black/10 opacity-60 group-hover:opacity-40 transition-opacity" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-black/10 opacity-60 group-hover:opacity-40 transition-opacity" />
+
+        {/* Out of Stock Overlay Badge */}
+        {isOutOfStock && (
+          <div className="absolute inset-0 bg-forest-950/40 backdrop-blur-[1px] flex items-center justify-center z-10 pointer-events-none">
+            <span className="px-3.5 py-1.5 rounded-full bg-red-600 text-white text-[11px] font-black uppercase tracking-wider shadow-lg border border-red-300/40">
+              Sold Out / Out of Stock
+            </span>
+          </div>
+        )}
 
         {/* Top Badges */}
-        <div className="absolute top-3 left-3 right-3 flex items-center justify-between">
+        <div className="absolute top-3 left-3 right-3 flex items-center justify-between z-20">
           <div className="flex flex-wrap gap-1.5">
             {product.isOrganic && (
               <span className="glass-card px-2.5 py-1 rounded-full text-[11px] font-bold text-forest-900 flex items-center gap-1 shadow-xs backdrop-blur-md">
@@ -76,22 +95,43 @@ export default function ProductCard({ product }) {
           </button>
         </div>
 
-        {/* Stock / Availability Pill at bottom of image */}
-        <div className="absolute bottom-3 left-3 flex items-center space-x-1.5 glass-card px-2.5 py-0.5 rounded-full text-[11px] font-semibold text-forest-950">
-          <span className={`w-2 h-2 rounded-full ${product.availableQuantity > 0 ? 'bg-fresh' : 'bg-red-400'}`} />
-          <span>{product.availableQuantity > 0 ? `${product.availableQuantity} ${product.unit} in harvest` : 'Sold Out'}</span>
+        {/* Real-time Stock / Availability Pill at bottom of image */}
+        <div className={`absolute bottom-3 left-3 flex items-center space-x-1.5 glass-card px-2.5 py-0.5 rounded-full text-[11px] font-semibold z-20 ${
+          isOutOfStock 
+            ? 'bg-red-950/80 text-red-200 border border-red-400/30' 
+            : availableQty <= 10 
+              ? 'bg-amber-950/80 text-amber-200 border border-amber-400/30' 
+              : 'text-forest-950'
+        }`}>
+          <span className={`w-2 h-2 rounded-full ${
+            isOutOfStock 
+              ? 'bg-red-500' 
+              : availableQty <= 10 
+                ? 'bg-amber-400 animate-pulse' 
+                : 'bg-fresh'
+          }`} />
+          <span>
+            {isOutOfStock
+              ? 'Out of Stock'
+              : availableQty <= 10
+                ? `Only ${availableQty} ${product.unit} left!`
+                : `${availableQty} ${product.unit} in stock`}
+          </span>
         </div>
       </div>
 
       {/* Card Content Area */}
       <div className="p-4 sm:p-5 flex-1 flex flex-col justify-between">
         <div>
-          {/* Farmer & Location Line */}
+          {/* Farmer & Location Line with Canonical Avatar */}
           <div className="flex items-center space-x-2 mb-2">
             <img
-              src={product.farmerAvatar}
+              src={farmerAvatarSrc}
               alt={product.farmerName}
-              className="w-6 h-6 rounded-full object-cover border border-forest-200"
+              onError={(e) => {
+                e.currentTarget.src = getCartoonAvatar(product.farmerName);
+              }}
+              className="w-6 h-6 rounded-full object-cover border border-forest-200 shrink-0"
             />
             <span className="text-xs font-semibold text-forest-900 truncate">
               {product.farmerName}
@@ -134,12 +174,19 @@ export default function ProductCard({ product }) {
             >
               <span>Admin View</span>
             </span>
+          ) : isOutOfStock ? (
+            <button
+              disabled
+              className="inline-flex items-center px-3.5 py-2 rounded-xl bg-gray-100 text-gray-400 border border-gray-200 text-xs font-bold cursor-not-allowed"
+              title="Sold out: All harvest of this produce has been ordered"
+            >
+              <span>Sold Out</span>
+            </button>
           ) : (
             <button
               onClick={handleAddToCart}
-              disabled={product.availableQuantity <= 0}
-              className="inline-flex items-center space-x-1.5 px-3.5 py-2 rounded-xl bg-forest-900 hover:bg-forest-800 disabled:bg-gray-200 disabled:cursor-not-allowed text-white text-xs font-bold shadow-xs hover:shadow-md transition-all active:scale-95"
-              title="Add to cart"
+              className="inline-flex items-center space-x-1.5 px-3.5 py-2 rounded-xl bg-forest-900 hover:bg-forest-800 text-white text-xs font-bold shadow-xs hover:shadow-md transition-all active:scale-95"
+              title={`Add 1 ${product.unit} to cart`}
             >
               <Plus className="w-3.5 h-3.5 text-fresh" />
               <span>Add</span>

@@ -4,7 +4,7 @@ export const testimonials = [
     name: 'Ramesh Patel',
     role: 'Small Vegetable Farmer',
     farm: 'Patel Organic Farms, Nashik',
-    avatar: 'https://images.unsplash.com/photo-1595273670150-bd0c3c392e46?auto=format&fit=crop&w=200&q=80',
+    avatar: '/avatars/ramesh-patel.jpg',
     quote: 'Before AgriConnect, more than 40% of my harvest profits were absorbed by transport syndicates and commission agents. Now I list my tomatoes and potatoes directly from my field, set my own fair prices, and receive direct payments within 24 hours of dispatch.',
     metrics: '+38% Net Income',
     highlight: 'Direct Farm-to-Buyer Sales',

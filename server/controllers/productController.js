@@ -102,7 +102,7 @@ export async function createProduct(req, res) {
     const isFarmer = req.user.role === 'farmer';
     const farmerId = isFarmer ? req.user.id : req.body.farmerId || 'farmer-1';
     const farmerName = isFarmer ? req.user.name : req.body.farmerName || 'Ramesh Patel';
-    const farmerAvatar = req.user.avatar || 'https://images.unsplash.com/photo-1595273670150-bd0c3c392e46?auto=format&fit=crop&w=150&q=80';
+    const farmerAvatar = req.user.avatar || '/avatars/ramesh-patel.jpg';
     const location = req.user.location || req.body.location || 'Nashik, Maharashtra';
 
     const newProduct = await dataStore.createProduct({

@@ -132,7 +132,7 @@ export const dataStore = {
       location: userData.location || '',
       farmName: userData.farmName || '',
       buyerType: userData.buyerType || 'Individual Customer',
-      avatar: userData.avatar || (isFarmer ? 'https://images.unsplash.com/photo-1595273670150-bd0c3c392e46?auto=format&fit=crop&w=200&q=80' : 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80'),
+      avatar: userData.avatar || (isFarmer ? '/avatars/ramesh-patel.jpg' : `https://api.dicebear.com/7.x/adventurer/svg?seed=${encodeURIComponent(userData.name || 'User')}&backgroundColor=b6e3f4,c0aede,d1d4f9,ffd5dc,ffdfbf`),
       verified: isVerified,
       bio: userData.bio || '',
       specialties: userData.specialties || ['Vegetables'],
@@ -291,7 +291,21 @@ export const dataStore = {
     const id = orderData.id || `ORD-${Math.floor(1000 + Math.random() * 9000)}`;
     if (isMongoActive()) {
       const ord = new Order({ ...orderData, id });
-      return await ord.save();
+      const savedOrd = await ord.save();
+
+      // Deduct stock in MongoDB Product collection
+      if (Array.isArray(orderData.items)) {
+        for (const item of orderData.items) {
+          const prod = await Product.findOne({ $or: [{ id: item.id }, { _id: item.id }] });
+          if (prod) {
+            prod.availableQuantity = Math.max(0, (prod.availableQuantity || 0) - (Number(item.quantity) || 1));
+            prod.isAvailable = prod.availableQuantity > 0;
+            await prod.save();
+          }
+        }
+      }
+
+      return savedOrd;
     }
     const data = readLocalData();
     const newOrd = {
@@ -305,9 +319,9 @@ export const dataStore = {
     // Update quantities of products
     if (Array.isArray(orderData.items)) {
       orderData.items.forEach((item) => {
-        const prod = data.products.find((p) => p.id === item.id);
+        const prod = data.products.find((p) => p.id === item.id || p._id === item.id);
         if (prod) {
-          prod.availableQuantity = Math.max(0, prod.availableQuantity - item.quantity);
+          prod.availableQuantity = Math.max(0, (Number(prod.availableQuantity) || 0) - (Number(item.quantity) || 1));
           prod.isAvailable = prod.availableQuantity > 0;
         }
       });
@@ -319,17 +333,46 @@ export const dataStore = {
 
   async updateOrderStatus(id, status) {
     if (isMongoActive()) {
-      return await Order.findOneAndUpdate(
+      const existing = await Order.findOne({ $or: [{ id }, { _id: id }] });
+      const oldStatus = existing ? existing.status : null;
+      const updated = await Order.findOneAndUpdate(
         { $or: [{ id }, { _id: id }] },
         { status },
         { new: true }
       );
+
+      // If rejected, restore stock in MongoDB Product collection
+      if (status === 'Rejected' && oldStatus !== 'Rejected' && existing && Array.isArray(existing.items)) {
+        for (const item of existing.items) {
+          const prod = await Product.findOne({ $or: [{ id: item.id }, { _id: item.id }] });
+          if (prod) {
+            prod.availableQuantity = (Number(prod.availableQuantity) || 0) + (Number(item.quantity) || 1);
+            prod.isAvailable = true;
+            await prod.save();
+          }
+        }
+      }
+
+      return updated;
     }
     const data = readLocalData();
     const index = data.orders.findIndex((o) => o.id === id || o._id === id);
     if (index === -1) return null;
 
+    const oldStatus = data.orders[index].status;
     data.orders[index].status = status;
+
+    // If rejected, restore stock in db.json
+    if (status === 'Rejected' && oldStatus !== 'Rejected' && Array.isArray(data.orders[index].items)) {
+      data.orders[index].items.forEach((item) => {
+        const prod = data.products.find((p) => p.id === item.id || p._id === item.id);
+        if (prod) {
+          prod.availableQuantity = (Number(prod.availableQuantity) || 0) + (Number(item.quantity) || 1);
+          prod.isAvailable = true;
+        }
+      });
+    }
+
     writeLocalData(data);
     return data.orders[index];
   },
@@ -353,7 +396,7 @@ export const dataStore = {
             farmName: u.farmName || `${u.name}'s Organic Farm`,
             location: u.location || 'India',
             phone: u.phone || '',
-            avatar: u.avatar || 'https://images.unsplash.com/photo-1595273670150-bd0c3c392e46?auto=format&fit=crop&w=200&q=80',
+            avatar: u.avatar || '/avatars/ramesh-patel.jpg',
             verified: Boolean(u.verified),
             rating: 5.0,
             totalProduce: 0,
