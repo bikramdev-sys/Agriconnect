@@ -414,20 +414,20 @@ export default function AdminDashboard() {
  ];
 
  return (
- <div className="h-screen w-screen flex overflow-hidden bg-[#0A140F] text-slate-100 font-sans">
+ <div className="h-screen w-screen flex overflow-hidden bg-[#0B1120] text-slate-100 font-sans">
  
   {/* ===================== SIDEBAR (DESKTOP & MOBILE DRAWER) ===================== */}
   <aside 
-    className={`fixed inset-y-0 left-0 z-40 w-72 bg-[#09150E] border-r border-emerald-900/30 flex flex-col justify-between transition-transform duration-300 ease-in-out lg:static lg:translate-x-0 ${
+    className={`fixed inset-y-0 left-0 z-40 w-72 bg-[#0B1120] border-r border-slate-800/80 flex flex-col justify-between transition-transform duration-300 ease-in-out lg:static lg:translate-x-0 ${
       mobileSidebarOpen ? 'translate-x-0 shadow-2xl' : '-translate-x-full'
     }`}
   >
     {/* Top Header & Navigation Section */}
     <div className="flex flex-col">
       {/* Top Brand Header */}
-      <div className="p-5 border-b border-emerald-900/25 flex items-center justify-between">
+      <div className="p-5 border-b border-slate-800/70 flex items-center justify-between">
         <div className="flex items-center space-x-3">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500 to-forest-700 flex items-center justify-center text-white shadow-md shadow-emerald-950/60 ring-1 ring-emerald-400/30">
+          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-400 via-teal-500 to-emerald-700 flex items-center justify-center text-white shadow-md shadow-slate-950/80 ring-1 ring-emerald-400/40">
             <ShieldCheck className="w-5 h-5 text-white" />
           </div>
           <div>
@@ -435,11 +435,11 @@ export default function AdminDashboard() {
               <h1 className="font-display font-extrabold text-sm text-white tracking-tight">
                 AgriConnect
               </h1>
-              <span className="px-1.5 py-0.5 rounded text-[9px] font-semibold bg-emerald-500/15 text-emerald-300 border border-emerald-500/25 tracking-wide">
+              <span className="px-1.5 py-0.5 rounded text-[9px] font-semibold bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 tracking-wide">
                 ADMIN
               </span>
             </div>
-            <p className="text-[11px] text-emerald-400/80 font-medium flex items-center gap-1.5 mt-0.5">
+            <p className="text-[11px] text-emerald-300 font-medium flex items-center gap-1.5 mt-0.5">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
               <span>MongoDB Atlas Live</span>
             </p>
@@ -448,31 +448,31 @@ export default function AdminDashboard() {
 
         <button
           onClick={() => setMobileSidebarOpen(false)}
-          className="lg:hidden p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-white/5"
+          className="lg:hidden p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800/50"
         >
           <X className="w-5 h-5" />
         </button>
       </div>
 
       {/* Admin Identity Card */}
-      <div className="p-3.5 mx-3.5 my-3.5 rounded-xl bg-white/[0.03] hover:bg-white/[0.05] border border-white/[0.06] flex items-center space-x-3 transition-colors shadow-2xs">
+      <div className="p-3.5 mx-3.5 my-3.5 rounded-xl bg-slate-900/70 hover:bg-slate-900 border border-slate-800 flex items-center space-x-3 transition-colors shadow-2xs">
         <div className="relative shrink-0">
           <img
             src={user?.avatar || 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=200&q=80'}
             alt={user?.name || 'Administrator'}
-            className="w-10 h-10 rounded-lg object-cover ring-1 ring-emerald-500/30"
+            className="w-10 h-10 rounded-lg object-cover ring-1 ring-emerald-400/40"
           />
-          <span className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-emerald-400 ring-2 ring-[#09150E]" />
+          <span className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-emerald-400 ring-2 ring-[#0B1120]" />
         </div>
         <div className="min-w-0 flex-1">
           <div className="flex items-center justify-between">
             <p className="text-xs font-semibold text-white truncate">{user?.name || 'Bikram Dev'}</p>
-            <span className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-emerald-500/15 text-emerald-300 border border-emerald-500/25">
+            <span className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-emerald-500/15 text-emerald-300 border border-emerald-500/30">
               ROOT
             </span>
           </div>
           <p className="text-[11px] text-slate-400 truncate mt-0.5 font-sans">{user?.email || 'admin@agriconnect.org'}</p>
-          <p className="text-[10px] text-emerald-400/70 font-medium mt-0.5">National Directorate</p>
+          <p className="text-[10px] text-emerald-400 font-medium mt-0.5">National Directorate</p>
         </div>
       </div>
 
@@ -490,12 +490,12 @@ export default function AdminDashboard() {
               }}
               className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl font-medium text-xs transition-all text-left group ${
                 isActive
-                  ? 'bg-emerald-600 text-white shadow-md shadow-emerald-950/50 font-semibold'
-                  : 'text-slate-300 hover:text-white hover:bg-white/[0.04]'
+                  ? 'bg-gradient-to-r from-emerald-500 to-teal-600 text-white shadow-md shadow-emerald-950/50 font-semibold'
+                  : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
               }`}
             >
               <div className="flex items-center space-x-3">
-                <Icon className={`w-4 h-4 transition-colors ${isActive ? 'text-white' : 'text-emerald-400/70 group-hover:text-emerald-300'}`} />
+                <Icon className={`w-4 h-4 transition-colors ${isActive ? 'text-white' : 'text-slate-400 group-hover:text-emerald-300'}`} />
                 <span>{item.label}</span>
               </div>
               {item.badge !== null && (
@@ -503,8 +503,8 @@ export default function AdminDashboard() {
                   isActive 
                     ? 'bg-white/20 text-white' 
                     : item.urgent 
-                    ? 'bg-amber-500/15 text-amber-300 border border-amber-500/30 font-bold'
-                    : 'bg-white/[0.06] text-slate-300 border border-white/[0.06]'
+                    ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40 font-bold animate-pulse'
+                    : 'bg-slate-800/80 text-slate-300 border border-slate-700/60'
                 }`}>
                   {item.urgent && item.urgentText ? item.urgentText : item.badge}
                 </span>
@@ -516,10 +516,10 @@ export default function AdminDashboard() {
     </div>
 
     {/* Sidebar Footer Controls */}
-    <div className="p-3.5 border-t border-emerald-900/25 space-y-2">
+    <div className="p-3.5 border-t border-slate-800/70 space-y-2">
       <Link
         to="/marketplace"
-        className="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-medium text-slate-200 hover:text-white bg-white/[0.03] hover:bg-emerald-500/10 border border-white/[0.06] hover:border-emerald-500/30 transition-all group shadow-2xs"
+        className="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-medium text-slate-200 hover:text-white bg-slate-900/60 hover:bg-slate-800/80 border border-slate-800 hover:border-emerald-500/40 transition-all group shadow-2xs"
       >
         <div className="flex items-center space-x-2.5">
           <Store className="w-4 h-4 text-emerald-400 group-hover:scale-110 transition-transform" />
