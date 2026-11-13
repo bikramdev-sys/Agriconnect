@@ -19,6 +19,7 @@ import {
   Award,
   HelpCircle
 } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
 
 const cropOptions = [
   { name: 'Organic Vine Tomatoes', mandiPrice: 22, agriPrice: 38, unit: 'kg' },
@@ -31,9 +32,27 @@ const cropOptions = [
 ];
 
 export default function ForFarmers() {
+  const { user, isAuthenticated, isFarmer, isBuyer, isAdmin } = useAuth();
   const [selectedCrop, setSelectedCrop] = useState(cropOptions[0]);
   const [quantity, setQuantity] = useState(2500); // 2500 kg default
   const [openFaq, setOpenFaq] = useState(null);
+
+  // Smart contextual routing & button copy based on user authentication state
+  const farmerActionLink = isAuthenticated
+    ? (isFarmer ? '/dashboard/farmer' : isAdmin ? '/dashboard/admin' : '/marketplace')
+    : '/register?role=farmer';
+
+  const calculatorButtonText = isAuthenticated
+    ? (isFarmer ? 'Open Farmer Dashboard & List Crops' : isAdmin ? 'Open Admin Console' : 'Browse Marketplace Produce')
+    : 'Start Selling at Direct Rates';
+
+  const heroButtonText = isAuthenticated
+    ? (isFarmer ? 'Open Farmer Dashboard' : isAdmin ? 'Open Admin Console' : 'Explore Marketplace')
+    : 'Register Free as a Farmer';
+
+  const bottomCtaButtonText = isAuthenticated
+    ? (isFarmer ? 'Go to Farmer Dashboard' : isAdmin ? 'Go to Admin Console' : 'Explore Marketplace')
+    : 'Register as a Farmer Now';
 
   // Calculations
   const mandiEarnings = Math.round(quantity * selectedCrop.mandiPrice * 0.72); // after 28% deductions/brokers
@@ -194,10 +213,10 @@ export default function ForFarmers() {
             {/* Quick Action Navigation Buttons */}
             <div className="flex flex-wrap items-center justify-center gap-4 mb-12">
               <Link
-                to="/register?role=farmer"
+                to={farmerActionLink}
                 className="inline-flex items-center space-x-2 px-7 py-3.5 rounded-xl bg-fresh hover:bg-fresh-light text-forest-950 font-extrabold text-sm shadow-md hover:shadow-fresh/20 transition-all active:scale-95 group"
               >
-                <span>Register Free as a Farmer</span>
+                <span>{heroButtonText}</span>
                 <ArrowRight className="w-4 h-4 text-forest-950 group-hover:translate-x-1 transition-transform" />
               </Link>
               <a
@@ -351,10 +370,10 @@ export default function ForFarmers() {
               {/* Action Buttons */}
               <div className="flex flex-col sm:flex-row gap-3">
                 <Link
-                  to="/register?role=farmer"
+                  to={farmerActionLink}
                   className="flex-1 py-3.5 px-4 rounded-xl bg-fresh hover:bg-fresh-light text-forest-950 font-extrabold text-sm flex items-center justify-center space-x-2 shadow-md hover:shadow-fresh/20 transition-all active:scale-95 group"
                 >
-                  <span>Start Selling at Direct Rates</span>
+                  <span>{calculatorButtonText}</span>
                   <ArrowRight className="w-4 h-4 text-forest-950 group-hover:translate-x-1 transition-transform" />
                 </Link>
                 <button
@@ -563,10 +582,10 @@ export default function ForFarmers() {
             Join 12,000+ farmers across India who have switched to direct buyer commerce with zero commission fees.
           </p>
           <Link
-            to="/register?role=farmer"
+            to={farmerActionLink}
             className="inline-flex items-center space-x-2 px-9 py-4 rounded-2xl bg-fresh hover:bg-fresh-light text-forest-950 font-black text-base shadow-lg transition-all active:scale-95"
           >
-            <span>Register as a Farmer Now</span>
+            <span>{bottomCtaButtonText}</span>
             <ArrowRight className="w-5 h-5 text-forest-950" />
           </Link>
         </div>

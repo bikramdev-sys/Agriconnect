@@ -2,8 +2,19 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ArrowRight, BadgePercent, DollarSign, Store, Sparkles, CheckCircle } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
 
 export default function ForFarmersSection() {
+  const { isAuthenticated, isFarmer, isAdmin } = useAuth();
+
+  const ctaLink = isAuthenticated
+    ? (isFarmer ? '/dashboard/farmer' : isAdmin ? '/dashboard/admin' : '/marketplace')
+    : '/register?role=farmer';
+
+  const ctaText = isAuthenticated
+    ? (isFarmer ? 'Open Farmer Dashboard' : isAdmin ? 'Open Admin Console' : 'Explore Produce')
+    : 'Start Selling Today';
+
   const benefits = [
     {
       icon: Store,
@@ -74,10 +85,10 @@ export default function ForFarmersSection() {
             {/* CTA Button */}
             <div className="flex flex-col sm:flex-row items-center gap-4">
               <Link
-                to="/register?role=farmer"
+                to={ctaLink}
                 className="w-full sm:w-auto inline-flex items-center justify-center space-x-2 px-8 py-4 rounded-2xl bg-fresh hover:bg-fresh-light text-forest-950 font-extrabold text-base shadow-lg hover:shadow-fresh/20 transition-all active:scale-95 group"
               >
-                <span>Start Selling Today</span>
+                <span>{ctaText}</span>
                 <ArrowRight className="w-4 h-4 text-forest-950 group-hover:translate-x-1 transition-transform" />
               </Link>
               <span className="text-xs text-gray-400 flex items-center gap-1.5 font-medium">
