@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <defs>
+    <linearGradient id="favBg" x1="0" y1="0" x2="64" y2="64" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#062817"/>
+      <stop offset="100%" stop-color="#02170D"/>
+    </linearGradient>
+    <linearGradient id="favLeaf" x1="16" y1="48" x2="36" y2="12" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#15803D"/>
+      <stop offset="50%" stop-color="#22C55E"/>
+      <stop offset="100%" stop-color="#4ADE80"/>
+    </linearGradient>
+    <linearGradient id="favGold" x1="48" y1="48" x2="28" y2="12" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#D97706"/>
+      <stop offset="60%" stop-color="#F59E0B"/>
+      <stop offset="100%" stop-color="#FDE047"/>
+    </linearGradient>
+    <linearGradient id="favSprout" x1="32" y1="40" x2="32" y2="10" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#16A34A"/>
+      <stop offset="100%" stop-color="#86EFAC"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Modern Rounded Squircle Base -->
+  <rect width="64" height="64" rx="18" fill="url(#favBg)"/>
+  <rect x="1" y="1" width="62" height="62" rx="17" stroke="#10B981" stroke-width="1.5" stroke-opacity="0.35"/>
+
+  <!-- Left Green Farmer Blade -->
+  <path d="M16 48C16 33 23 18 32 12C31 24 25 37 19.5 48H16Z" fill="url(#favLeaf)"/>
+
+  <!-- Right Golden Grain Harvest Blade -->
+  <path d="M48 48C48 33 41 18 32 12C33 24 39 37 44.5 48H48Z" fill="url(#favGold)"/>
+
+  <!-- Center Rising Fresh Sprout -->
+  <path d="M32 13C28 21 27 29 32 38C37 29 36 21 32 13Z" fill="url(#favSprout)"/>
+
+  <!-- Connection Bridge Node & Central Stem -->
+  <circle cx="32" cy="45" r="3.2" fill="#FDE047"/>
+  <path d="M32 38V45" stroke="#4ADE80" stroke-width="2" stroke-linecap="round"/>
+</svg>

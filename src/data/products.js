@@ -1,0 +1,401 @@
+export const initialProducts = [
+  {
+    id: 'prod-1',
+    name: 'Fresh Tomatoes',
+    category: 'Vegetables',
+    price: 35,
+    unit: 'kg',
+    farmerId: 'farmer-1',
+    farmerName: 'Ramesh Patel',
+    farmerAvatar: 'https://images.unsplash.com/photo-1595273670150-bd0c3c392e46?auto=format&fit=crop&w=150&q=80',
+    location: 'Nashik, Maharashtra',
+    state: 'Maharashtra',
+    isOrganic: true,
+    isAvailable: true,
+    availableQuantity: 180,
+    minOrderQty: 1,
+    image: 'https://images.unsplash.com/photo-1592924357228-91a4daadcfea?auto=format&fit=crop&w=800&q=80',
+    images: [
+      'https://images.unsplash.com/photo-1592924357228-91a4daadcfea?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1518977676601-b53f82aba655?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1546470427-e26264be0b11?auto=format&fit=crop&w=800&q=80'
+    ],
+    rating: 4.9,
+    reviewsCount: 88,
+    harvestDate: 'Yesterday morning',
+    shelfLife: '6-8 days in cool storage',
+    description: 'Vine-ripened, sun-blessed field tomatoes hand-picked at peak sweetness. Rich in lycopene, juicy texture, and perfect for fresh salads, authentic curries, and sauces without artificial ripening agents.',
+    nutrition: {
+      calories: '18 kcal / 100g',
+      vitaminC: '28% RDA',
+      potassium: '237 mg',
+      dietaryFiber: '1.2 g'
+    },
+    featured: true,
+    todaysPick: true
+  },
+  {
+    id: 'prod-2',
+    name: 'Organic Potatoes',
+    category: 'Vegetables',
+    price: 28,
+    unit: 'kg',
+    farmerId: 'farmer-1',
+    farmerName: 'Ramesh Patel',
+    farmerAvatar: 'https://images.unsplash.com/photo-1595273670150-bd0c3c392e46?auto=format&fit=crop&w=150&q=80',
+    location: 'Nashik, Maharashtra',
+    state: 'Maharashtra',
+    isOrganic: true,
+    isAvailable: true,
+    availableQuantity: 320,
+    minOrderQty: 2,
+    image: 'https://images.unsplash.com/photo-1518977676601-b53f82aba655?auto=format&fit=crop&w=800&q=80',
+    images: [
+      'https://images.unsplash.com/photo-1518977676601-b53f82aba655?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1508747703725-719777637510?auto=format&fit=crop&w=800&q=80'
+    ],
+    rating: 4.8,
+    reviewsCount: 64,
+    harvestDate: '3 days ago',
+    shelfLife: '3-4 weeks',
+    description: 'Firm, golden organic potatoes grown in mineral-dense alluvial soil. Naturally cured, unpolished, and completely free from synthetic sprouting inhibitors.',
+    nutrition: {
+      calories: '77 kcal / 100g',
+      vitaminC: '32% RDA',
+      potassium: '421 mg',
+      dietaryFiber: '2.2 g'
+    },
+    featured: true
+  },
+  {
+    id: 'prod-3',
+    name: 'Green Spinach (Palak)',
+    category: 'Vegetables',
+    price: 20,
+    unit: 'bunch',
+    farmerId: 'farmer-4',
+    farmerName: 'Suresh Kumar',
+    farmerAvatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=150&q=80',
+    location: 'Mysuru, Karnataka',
+    state: 'Karnataka',
+    isOrganic: true,
+    isAvailable: true,
+    availableQuantity: 95,
+    minOrderQty: 1,
+    image: 'https://images.unsplash.com/photo-1576045057995-568f588f82fb?auto=format&fit=crop&w=800&q=80',
+    images: [
+      'https://images.unsplash.com/photo-1576045057995-568f588f82fb?auto=format&fit=crop&w=800&q=80'
+    ],
+    rating: 4.95,
+    reviewsCount: 112,
+    harvestDate: 'Today 5:30 AM',
+    shelfLife: '3-4 days refrigerated',
+    description: 'Crisp, emerald green spinach harvested at dawn and cold-sprayed for natural crispness. Loaded with active chlorophyll, bioavailable iron, and earthy freshness.',
+    nutrition: {
+      calories: '23 kcal / 100g',
+      vitaminA: '188% RDA',
+      iron: '2.7 mg',
+      folate: '49% RDA'
+    },
+    featured: true
+  },
+  {
+    id: 'prod-4',
+    name: 'Fresh Royal Apples',
+    category: 'Fruits',
+    price: 120,
+    unit: 'kg',
+    farmerId: 'farmer-2',
+    farmerName: 'Lakshmi Devi',
+    farmerAvatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=150&q=80',
+    location: 'Shimla, Himachal Pradesh',
+    state: 'Himachal Pradesh',
+    isOrganic: true,
+    isAvailable: true,
+    availableQuantity: 150,
+    minOrderQty: 1,
+    image: 'https://images.unsplash.com/photo-1560806887-1e4cd0b6cbd6?auto=format&fit=crop&w=800&q=80',
+    images: [
+      'https://images.unsplash.com/photo-1560806887-1e4cd0b6cbd6?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1568702846914-96b305d2aaeb?auto=format&fit=crop&w=800&q=80'
+    ],
+    rating: 4.98,
+    reviewsCount: 175,
+    harvestDate: '2 days ago',
+    shelfLife: '2-3 weeks',
+    description: 'Crisp high-altitude Himalayan apples with a vibrant red blush and deep natural aroma. Zero synthetic wax coating; directly hand-packed in sustainable cardboard trays.',
+    nutrition: {
+      calories: '52 kcal / 100g',
+      dietaryFiber: '2.4 g',
+      vitaminC: '14% RDA',
+      antioxidants: 'High Quercetin'
+    },
+    featured: true
+  },
+  {
+    id: 'prod-5',
+    name: 'Sweet Corn',
+    category: 'Vegetables',
+    price: 30,
+    unit: 'piece',
+    farmerId: 'farmer-4',
+    farmerName: 'Suresh Kumar',
+    farmerAvatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=150&q=80',
+    location: 'Mysuru, Karnataka',
+    state: 'Karnataka',
+    isOrganic: false,
+    isAvailable: true,
+    availableQuantity: 240,
+    minOrderQty: 2,
+    image: 'https://images.unsplash.com/photo-1551754655-cd27e38d2076?auto=format&fit=crop&w=800&q=80',
+    images: [
+      'https://images.unsplash.com/photo-1551754655-cd27e38d2076?auto=format&fit=crop&w=800&q=80'
+    ],
+    rating: 4.75,
+    reviewsCount: 52,
+    harvestDate: 'Yesterday evening',
+    shelfLife: '5-7 days',
+    description: 'Juicy golden sweet corn cobs bursting with natural sugars and tender kernels. Grown with sustainable soil practices for superior roasting and boiling.',
+    nutrition: {
+      calories: '86 kcal / 100g',
+      protein: '3.2 g',
+      fiber: '2.7 g',
+      lutein: '900 mcg'
+    },
+    featured: false
+  },
+  {
+    id: 'prod-6',
+    name: 'Premium Taraori Basmati Rice',
+    category: 'Grains',
+    price: 65,
+    unit: 'kg',
+    farmerId: 'farmer-3',
+    farmerName: 'Gurpreet Singh',
+    farmerAvatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=150&q=80',
+    location: 'Ludhiana, Punjab',
+    state: 'Punjab',
+    isOrganic: true,
+    isAvailable: true,
+    availableQuantity: 500,
+    minOrderQty: 5,
+    image: 'https://images.unsplash.com/photo-1586201375761-83865001e31c?auto=format&fit=crop&w=800&q=80',
+    images: [
+      'https://images.unsplash.com/photo-1586201375761-83865001e31c?auto=format&fit=crop&w=800&q=80'
+    ],
+    rating: 4.92,
+    reviewsCount: 220,
+    harvestDate: 'Aged 14 months',
+    shelfLife: '18 months',
+    description: 'Authentic 2-year aged Taraori Basmati rice known for its slender grains that elongate up to 2.5x upon cooking. Delightfully non-sticky with unforgettable floral aroma.',
+    nutrition: {
+      calories: '130 kcal / 100g cooked',
+      carbs: '28 g',
+      protein: '2.7 g',
+      glycemicIndex: 'Medium-low'
+    },
+    featured: true
+  },
+  {
+    id: 'prod-7',
+    name: 'Organic Whole Moong Dal',
+    category: 'Pulses',
+    price: 110,
+    unit: 'kg',
+    farmerId: 'farmer-4',
+    farmerName: 'Suresh Kumar',
+    farmerAvatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=150&q=80',
+    location: 'Mysuru, Karnataka',
+    state: 'Karnataka',
+    isOrganic: true,
+    isAvailable: true,
+    availableQuantity: 120,
+    minOrderQty: 1,
+    image: 'https://images.unsplash.com/photo-1515543237350-b3eea1ec8082?auto=format&fit=crop&w=800&q=80',
+    images: [
+      'https://images.unsplash.com/photo-1515543237350-b3eea1ec8082?auto=format&fit=crop&w=800&q=80'
+    ],
+    rating: 4.86,
+    reviewsCount: 78,
+    harvestDate: 'Last week',
+    shelfLife: '12 months',
+    description: 'Unpolished whole green gram harvested from regenerative farm beds. High in plant-based protein, easy to digest, and ideal for sprouting or nutritious khichdi.',
+    nutrition: {
+      calories: '347 kcal / 100g dry',
+      protein: '24 g',
+      dietaryFiber: '16 g',
+      iron: '6.7 mg'
+    },
+    featured: false
+  },
+  {
+    id: 'prod-8',
+    name: 'Pure Gir Cow A2 Milk',
+    category: 'Dairy',
+    price: 85,
+    unit: 'liter',
+    farmerId: 'farmer-5',
+    farmerName: 'Ananya Sharma',
+    farmerAvatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=150&q=80',
+    location: 'Anand, Gujarat',
+    state: 'Gujarat',
+    isOrganic: true,
+    isAvailable: true,
+    availableQuantity: 60,
+    minOrderQty: 1,
+    image: 'https://images.unsplash.com/photo-1550583724-b2692b85b150?auto=format&fit=crop&w=800&q=80',
+    images: [
+      'https://images.unsplash.com/photo-1550583724-b2692b85b150?auto=format&fit=crop&w=800&q=80'
+    ],
+    rating: 4.97,
+    reviewsCount: 142,
+    harvestDate: 'Morning milking (Today)',
+    shelfLife: '3-4 days refrigerated',
+    description: '100% pure A2 beta-casein fresh whole milk from grass-grazed indigenous Gir cows. Non-homogenized, naturally sweet, with rich cream layer and antibiotic-free guarantee.',
+    nutrition: {
+      calories: '64 kcal / 100ml',
+      protein: '3.4 g (100% A2)',
+      calcium: '125 mg',
+      healthyFats: '4.2 g'
+    },
+    featured: true
+  },
+  {
+    id: 'prod-9',
+    name: 'Fresh Nagpur Oranges',
+    category: 'Fruits',
+    price: 70,
+    unit: 'kg',
+    farmerId: 'farmer-1',
+    farmerName: 'Ramesh Patel',
+    farmerAvatar: 'https://images.unsplash.com/photo-1595273670150-bd0c3c392e46?auto=format&fit=crop&w=150&q=80',
+    location: 'Nashik, Maharashtra',
+    state: 'Maharashtra',
+    isOrganic: true,
+    isAvailable: true,
+    availableQuantity: 110,
+    minOrderQty: 1,
+    image: 'https://images.unsplash.com/photo-1611080626919-7cf5a9dbab5b?auto=format&fit=crop&w=800&q=80',
+    images: [
+      'https://images.unsplash.com/photo-1611080626919-7cf5a9dbab5b?auto=format&fit=crop&w=800&q=80'
+    ],
+    rating: 4.84,
+    reviewsCount: 61,
+    harvestDate: 'Yesterday',
+    shelfLife: '10-14 days',
+    description: 'Plump, tangy-sweet mandarin oranges with loose skins and seedless segments. Packed with active Vitamin C and bioflavonoids for natural immunity boosting.',
+    nutrition: {
+      calories: '47 kcal / 100g',
+      vitaminC: '53 mg (88% RDA)',
+      folate: '30 mcg',
+      waterContent: '87%'
+    },
+    featured: false
+  },
+  {
+    id: 'prod-10',
+    name: 'Artisanal Bilona A2 Ghee',
+    category: 'Dairy',
+    price: 850,
+    unit: 'jar (500ml)',
+    farmerId: 'farmer-5',
+    farmerName: 'Ananya Sharma',
+    farmerAvatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=150&q=80',
+    location: 'Anand, Gujarat',
+    state: 'Gujarat',
+    isOrganic: true,
+    isAvailable: true,
+    availableQuantity: 45,
+    minOrderQty: 1,
+    image: 'https://images.unsplash.com/photo-1628088062854-d1870b4553da?auto=format&fit=crop&w=800&q=80',
+    images: [
+      'https://images.unsplash.com/photo-1628088062854-d1870b4553da?auto=format&fit=crop&w=800&q=80'
+    ],
+    rating: 4.99,
+    reviewsCount: 230,
+    harvestDate: 'Handcrafted this week',
+    shelfLife: '9 months',
+    description: 'Prepared using ancient Vedic Bilona method: curd made from Gir cow whole milk is churned bi-directionally with wooden churners, then slowly simmered over cow dung embers.',
+    nutrition: {
+      calories: '884 kcal / 100g',
+      cla: 'High CLA content',
+      omega3: 'Rich Omega-3/9',
+      butyricAcid: 'Natural gut enhancer'
+    },
+    featured: true
+  },
+  {
+    id: 'prod-11',
+    name: 'Crisp Green Bell Peppers',
+    category: 'Vegetables',
+    price: 45,
+    unit: 'kg',
+    farmerId: 'farmer-1',
+    farmerName: 'Ramesh Patel',
+    farmerAvatar: 'https://images.unsplash.com/photo-1595273670150-bd0c3c392e46?auto=format&fit=crop&w=150&q=80',
+    location: 'Nashik, Maharashtra',
+    state: 'Maharashtra',
+    isOrganic: true,
+    isAvailable: true,
+    availableQuantity: 80,
+    minOrderQty: 1,
+    image: 'https://images.unsplash.com/photo-1563565375-f3fdfdbefa83?auto=format&fit=crop&w=800&q=80',
+    images: [
+      'https://images.unsplash.com/photo-1563565375-f3fdfdbefa83?auto=format&fit=crop&w=800&q=80'
+    ],
+    rating: 4.79,
+    reviewsCount: 39,
+    harvestDate: 'Yesterday',
+    shelfLife: '7-10 days',
+    description: 'Thick-walled, crisp green capsicums grown in shade-net tunnels. Sweet crunch and vibrant earthy taste, perfect for stir-fries and salads.',
+    nutrition: {
+      calories: '20 kcal / 100g',
+      vitaminC: '134% RDA',
+      vitaminB6: '10% RDA',
+      fiber: '1.7 g'
+    },
+    featured: false
+  },
+  {
+    id: 'prod-12',
+    name: 'Heritage Red Wheat (Sharbati)',
+    category: 'Grains',
+    price: 48,
+    unit: 'kg',
+    farmerId: 'farmer-3',
+    farmerName: 'Gurpreet Singh',
+    farmerAvatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=150&q=80',
+    location: 'Ludhiana, Punjab',
+    state: 'Punjab',
+    isOrganic: true,
+    isAvailable: true,
+    availableQuantity: 400,
+    minOrderQty: 5,
+    image: 'https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?auto=format&fit=crop&w=800&q=80',
+    images: [
+      'https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?auto=format&fit=crop&w=800&q=80'
+    ],
+    rating: 4.88,
+    reviewsCount: 95,
+    harvestDate: 'Current Season harvest',
+    shelfLife: '12 months',
+    description: 'Naturally heavy golden grains yielding exceptionally soft, sweet rotis. Sun-dried and sorted with stone separation, 100% pesticide-free.',
+    nutrition: {
+      calories: '340 kcal / 100g',
+      protein: '12.5 g',
+      fiber: '10.8 g',
+      zinc: '3.9 mg'
+    },
+    featured: false
+  }
+];
+
+export const productCategories = [
+  { id: 'all', name: 'All Produce', icon: 'Sparkles' },
+  { id: 'Vegetables', name: 'Vegetables', icon: 'Carrot' },
+  { id: 'Fruits', name: 'Fruits', icon: 'Apple' },
+  { id: 'Grains', name: 'Grains', icon: 'Wheat' },
+  { id: 'Pulses', name: 'Pulses', icon: 'Salad' },
+  { id: 'Dairy', name: 'Dairy', icon: 'Milk' },
+  { id: 'organic', name: 'Organic Produce', icon: 'Leaf' }
+];

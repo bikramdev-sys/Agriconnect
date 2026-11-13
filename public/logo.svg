@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 60" fill="none">
+  <defs>
+    <linearGradient id="logoBg" x1="0" y1="0" x2="52" y2="52" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#062817"/>
+      <stop offset="100%" stop-color="#02170D"/>
+    </linearGradient>
+    <linearGradient id="logoLeaf" x1="16" y1="42" x2="30" y2="12" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#15803D"/>
+      <stop offset="50%" stop-color="#22C55E"/>
+      <stop offset="100%" stop-color="#4ADE80"/>
+    </linearGradient>
+    <linearGradient id="logoGold" x1="42" y1="42" x2="26" y2="12" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#D97706"/>
+      <stop offset="60%" stop-color="#F59E0B"/>
+      <stop offset="100%" stop-color="#FDE047"/>
+    </linearGradient>
+    <linearGradient id="logoSprout" x1="26" y1="34" x2="26" y2="10" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#16A34A"/>
+      <stop offset="100%" stop-color="#86EFAC"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Emblem Icon (52x52) centered vertically -->
+  <g transform="translate(4, 4)">
+    <rect width="52" height="52" rx="16" fill="url(#logoBg)"/>
+    <rect x="0.75" y="0.75" width="50.5" height="50.5" rx="15.25" stroke="#10B981" stroke-width="1.5" stroke-opacity="0.35"/>
+    <path d="M14 40C14 27 20 15 26 10C25 20 20 31 16.5 40H14Z" fill="url(#logoLeaf)"/>
+    <path d="M38 40C38 27 32 15 26 10C27 20 32 31 35.5 40H38Z" fill="url(#logoGold)"/>
+    <path d="M26 11C23 18 22 24 26 31C30 24 29 18 26 11Z" fill="url(#logoSprout)"/>
+    <circle cx="26" cy="37" r="2.8" fill="#FDE047"/>
+    <path d="M26 31V37" stroke="#4ADE80" stroke-width="1.8" stroke-linecap="round"/>
+  </g>
+
+  <!-- Brand Typography -->
+  <g transform="translate(68, 12)">
+    <!-- "AgriConnect" -->
+    <text x="0" y="24" font-family="'Outfit', 'Plus Jakarta Sans', sans-serif" font-weight="900" font-size="26" letter-spacing="-0.5" fill="#0A2C1C">
+      Agri<tspan fill="#10B981">Connect</tspan>
+    </text>
+    <!-- Subtitle: "DIRECT FARM TRADE" -->
+    <text x="1" y="38" font-family="'Plus Jakarta Sans', sans-serif" font-weight="800" font-size="8.5" letter-spacing="1.8" fill="#4B6354">
+      DIRECT FARM TRADE
+    </text>
+  </g>
+</svg>
