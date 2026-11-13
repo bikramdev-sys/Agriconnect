@@ -143,10 +143,10 @@ export const api = {
         body: JSON.stringify(orderData),
       }),
 
-    updateStatus: (id, status) =>
+    updateStatus: (id, status, fullOrder = null) =>
       request(`/orders/${id}/status`, {
         method: 'PUT',
-        body: JSON.stringify({ status }),
+        body: JSON.stringify({ status, order: fullOrder }),
       }),
   },
 

@@ -4,11 +4,11 @@ import {
   createOrder,
   updateOrderStatus,
 } from '../controllers/orderController.js';
-import { verifyToken, requireRole } from '../middleware/auth.js';
+import { optionalVerifyToken, verifyToken, requireRole } from '../middleware/auth.js';
 
 const router = express.Router();
 
-router.get('/', verifyToken, getOrders);
+router.get('/', optionalVerifyToken, getOrders);
 router.post('/', createOrder);
 router.put('/:id/status', verifyToken, requireRole('farmer', 'admin'), updateOrderStatus);
 

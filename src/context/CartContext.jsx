@@ -98,7 +98,35 @@ export function CartProvider({ children }) {
     try {
       const prodRes = await api.products.getAll();
       if (Array.isArray(prodRes?.products)) {
-        setProducts(prodRes.products.map(normalizeProduct));
+        setProducts((prevProducts) => {
+          const backendProds = prodRes.products.map(normalizeProduct);
+          if (!prevProducts || prevProducts.length === 0) {
+            localStorage.setItem('agriconnect_products', JSON.stringify(backendProds));
+            return backendProds;
+          }
+
+          const mergedProds = backendProds.map((bp) => {
+            const lp = prevProducts.find((p) => p.id === bp.id);
+            if (!lp) return bp;
+
+            // Retain the lower availableQuantity between local and server so purchased deductions are never lost
+            const localQty = Number(lp.availableQuantity);
+            const serverQty = Number(bp.availableQuantity);
+            const minQty = Math.min(
+              isNaN(localQty) ? serverQty : localQty,
+              isNaN(serverQty) ? localQty : serverQty
+            );
+
+            return {
+              ...bp,
+              availableQuantity: minQty,
+              isAvailable: minQty > 0
+            };
+          });
+
+          localStorage.setItem('agriconnect_products', JSON.stringify(mergedProds));
+          return mergedProds;
+        });
       }
     } catch (e) {
       // use local
@@ -125,7 +153,46 @@ export function CartProvider({ children }) {
     try {
       const ordRes = await api.orders.getAll();
       if (Array.isArray(ordRes?.orders)) {
-        setOrders(ordRes.orders);
+        setOrders((prevOrders) => {
+          if (!prevOrders || prevOrders.length === 0) {
+            localStorage.setItem('agriconnect_orders', JSON.stringify(ordRes.orders));
+            return ordRes.orders;
+          }
+
+          const serverOrderMap = new Map();
+          ordRes.orders.forEach((o) => {
+            if (o.id) serverOrderMap.set(o.id, o);
+          });
+
+          // Merge local and server orders: preserve local non-Pending statuses (e.g. Delivered)
+          const merged = prevOrders.map((localOrd) => {
+            const serverOrd = serverOrderMap.get(localOrd.id);
+            if (!serverOrd) {
+              // Server doesn't have it yet; keep local and push to server
+              api.orders.create(localOrd).catch(() => {});
+              return localOrd;
+            }
+
+            // If local status has been changed by Admin/Farmer (e.g. Delivered, Accepted)
+            // and server still says Pending, retain local and sync to server
+            if (localOrd.status !== 'Pending' && serverOrd.status === 'Pending') {
+              api.orders.updateStatus(localOrd.id, localOrd.status, localOrd).catch(() => {});
+              return { ...serverOrd, status: localOrd.status };
+            }
+
+            return { ...localOrd, ...serverOrd };
+          });
+
+          // Add any new server orders not in local
+          ordRes.orders.forEach((serverOrd) => {
+            if (!prevOrders.some((p) => p.id === serverOrd.id)) {
+              merged.push(serverOrd);
+            }
+          });
+
+          localStorage.setItem('agriconnect_orders', JSON.stringify(merged));
+          return merged;
+        });
       }
     } catch (e) {
       // use local
@@ -338,8 +405,9 @@ export function CartProvider({ children }) {
     };
 
     // Deduct stock in real-time across the application
-    setProducts((prev) =>
-      prev.map((prod) => {
+    let updatedProducts;
+    setProducts((prev) => {
+      updatedProducts = prev.map((prod) => {
         const cartItem = cartItems.find((item) => item.id === prod.id);
         if (cartItem) {
           const currentQty = Number(prod.availableQuantity) || 0;
@@ -351,15 +419,39 @@ export function CartProvider({ children }) {
           };
         }
         return prod;
-      })
-    );
+      });
+      try {
+        localStorage.setItem('agriconnect_products', JSON.stringify(updatedProducts));
+      } catch (e) {
+        console.warn('LocalStorage products save error:', e);
+      }
+      return updatedProducts;
+    });
 
-    setOrders((prev) => [newOrder, ...prev]);
+    const updatedOrders = [newOrder, ...orders];
+    setOrders(updatedOrders);
+    try {
+      localStorage.setItem('agriconnect_orders', JSON.stringify(updatedOrders));
+    } catch (e) {
+      console.warn('LocalStorage orders save error:', e);
+    }
     clearCart();
 
     // Persist to backend database
     api.orders.create(newOrder).catch((err) => {
       console.warn('Backend order sync:', err.message);
+    });
+
+    // Also persist product stock update to backend for each item in cart
+    cartItems.forEach((item) => {
+      const prod = products.find((p) => p.id === item.id);
+      if (prod) {
+        const remaining = Math.max(0, (Number(prod.availableQuantity) || 0) - Number(item.quantity));
+        api.products.update(item.id, {
+          availableQuantity: remaining,
+          isAvailable: remaining > 0
+        }).catch(() => {});
+      }
     });
 
     try {
@@ -382,16 +474,24 @@ export function CartProvider({ children }) {
     const orderToUpdate = orders.find((o) => o.id === orderId);
     const oldStatus = orderToUpdate?.status;
 
-    setOrders((prev) =>
-      prev.map((ord) =>
+    let updatedOrders;
+    setOrders((prev) => {
+      updatedOrders = prev.map((ord) =>
         ord.id === orderId ? { ...ord, status: newStatus } : ord
-      )
-    );
+      );
+      try {
+        localStorage.setItem('agriconnect_orders', JSON.stringify(updatedOrders));
+      } catch (e) {
+        console.warn('LocalStorage save error:', e);
+      }
+      return updatedOrders;
+    });
 
     if (newStatus === 'Rejected' && oldStatus !== 'Rejected' && orderToUpdate?.items) {
       // Replenish stock in real time
-      setProducts((prev) =>
-        prev.map((prod) => {
+      let restoredProducts;
+      setProducts((prev) => {
+        restoredProducts = prev.map((prod) => {
           const item = orderToUpdate.items.find((i) => i.id === prod.id);
           if (item) {
             const currentQty = Number(prod.availableQuantity) || 0;
@@ -403,16 +503,39 @@ export function CartProvider({ children }) {
             };
           }
           return prod;
-        })
-      );
+        });
+        try {
+          localStorage.setItem('agriconnect_products', JSON.stringify(restoredProducts));
+        } catch {}
+        return restoredProducts;
+      });
+
+      // Update backend products stock
+      orderToUpdate.items.forEach((item) => {
+        const prod = products.find((p) => p.id === item.id);
+        if (prod) {
+          const restored = (Number(prod.availableQuantity) || 0) + Number(item.quantity);
+          api.products.update(item.id, {
+            availableQuantity: restored,
+            isAvailable: true
+          }).catch(() => {});
+        }
+      });
+
       toast(`Order #${orderId} declined. Harvest stock replenished.`, { icon: '📦' });
     } else if (newStatus === 'Accepted') {
       toast.success(`Order #${orderId} accepted and harvest batch reserved!`);
+    } else if (newStatus === 'Delivered') {
+      toast.success(`Order #${orderId} marked as Delivered! Direct farm payout completed. 🌾`);
     } else {
       toast.success(`Order #${orderId} status set to: ${newStatus}`);
     }
 
-    api.orders.updateStatus(orderId, newStatus).catch(() => {});
+    // Persist status update to backend (with full order payload in case backend order needs to be created/synced)
+    api.orders.updateStatus(orderId, newStatus, orderToUpdate ? { ...orderToUpdate, status: newStatus } : null)
+      .catch((err) => {
+        console.warn('Backend order status update note:', err.message);
+      });
   };
 
   // Farmer / Admin Product CRUD

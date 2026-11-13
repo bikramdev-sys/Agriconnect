@@ -74,7 +74,18 @@ export const dataStore = {
 
   async findUserById(id) {
     if (isMongoActive()) {
-      return await User.findById(id).catch(() => null);
+      try {
+        let user = null;
+        if (mongoose.Types.ObjectId.isValid(id)) {
+          user = await User.findById(id);
+        }
+        if (!user) {
+          user = await User.findOne({ id });
+        }
+        return user;
+      } catch {
+        return null;
+      }
     }
     const data = readLocalData();
     return data.users.find((u) => u.id === id || u._id === id) || null;
@@ -290,6 +301,12 @@ export const dataStore = {
   async createOrder(orderData) {
     const id = orderData.id || `ORD-${Math.floor(1000 + Math.random() * 9000)}`;
     if (isMongoActive()) {
+      let existingOrd = await Order.findOne({ $or: [{ id }, { _id: id }] });
+      if (existingOrd) {
+        Object.assign(existingOrd, orderData);
+        return await existingOrd.save();
+      }
+
       const ord = new Order({ ...orderData, id });
       const savedOrd = await ord.save();
 
@@ -308,6 +325,13 @@ export const dataStore = {
       return savedOrd;
     }
     const data = readLocalData();
+    const existingIdx = data.orders.findIndex((o) => o.id === id || o._id === id);
+    if (existingIdx !== -1) {
+      data.orders[existingIdx] = { ...data.orders[existingIdx], ...orderData };
+      writeLocalData(data);
+      return data.orders[existingIdx];
+    }
+
     const newOrd = {
       id,
       ...orderData,

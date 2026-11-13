@@ -54,6 +54,11 @@ export function AuthProvider({ children }) {
     async function checkAuth() {
       const savedToken = localStorage.getItem('agriconnect_token');
       if (savedToken) {
+        if (savedToken === 'demo-admin-token' || savedToken === 'admin-token') {
+          setUser(DEMO_ADMIN);
+          setLoading(false);
+          return;
+        }
         try {
           const res = await api.auth.getMe();
           if (res?.user) {
@@ -113,6 +118,9 @@ export function AuthProvider({ children }) {
 
       if (email.toLowerCase().includes('admin')) {
         setUser(DEMO_ADMIN);
+        const adminTok = 'demo-admin-token';
+        setToken(adminTok);
+        localStorage.setItem('agriconnect_token', adminTok);
         toast.success('Administrator clearance granted 🛡️');
         return DEMO_ADMIN;
       }

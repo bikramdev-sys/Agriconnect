@@ -8,7 +8,7 @@ export async function getOrders(req, res) {
     const user = req.user;
     let filter = {};
 
-    if (user.role === 'farmer') {
+    if (user && user.role === 'farmer') {
       filter = {
         $or: [
           { farmerId: user.id },
@@ -17,7 +17,7 @@ export async function getOrders(req, res) {
           { 'items.farmerName': user.name },
         ],
       };
-    } else if (user.role === 'buyer') {
+    } else if (user && user.role === 'buyer') {
       filter = {
         $or: [
           { customerEmail: user.email.toLowerCase() },
@@ -25,7 +25,7 @@ export async function getOrders(req, res) {
         ],
       };
     }
-    // Admin has empty filter => gets all orders
+    // Admin or public query: empty filter => gets all orders
 
     const orders = await dataStore.getOrders(filter);
 
@@ -49,6 +49,7 @@ export async function getOrders(req, res) {
 export async function createOrder(req, res) {
   try {
     const {
+      id,
       items,
       customerName,
       customerEmail,
@@ -56,6 +57,13 @@ export async function createOrder(req, res) {
       shippingAddress,
       paymentMethod,
       discount,
+      farmerId: reqFarmerId,
+      farmerName: reqFarmerName,
+      status: reqStatus,
+      date: reqDate,
+      total: reqTotal,
+      subtotal: reqSubtotal,
+      deliveryFee: reqDeliveryFee,
     } = req.body;
 
     if (!items || !items.length || !shippingAddress) {
@@ -65,21 +73,23 @@ export async function createOrder(req, res) {
       });
     }
 
-    const subtotal = items.reduce((sum, item) => sum + (Number(item.price) || 0) * (Number(item.quantity) || 1), 0);
-    const deliveryFee = subtotal > 800 ? 0 : 70;
+    const calculatedSubtotal = items.reduce((sum, item) => sum + (Number(item.price) || 0) * (Number(item.quantity) || 1), 0);
+    const subtotal = reqSubtotal !== undefined ? Number(reqSubtotal) : calculatedSubtotal;
+    const deliveryFee = reqDeliveryFee !== undefined ? Number(reqDeliveryFee) : (subtotal > 800 ? 0 : 70);
     const discountVal = Number(discount) || 0;
-    const total = Math.max(0, subtotal + deliveryFee - discountVal);
+    const total = reqTotal !== undefined ? Number(reqTotal) : Math.max(0, subtotal + deliveryFee - discountVal);
 
-    // Get farmer details from first item or default
+    // Get farmer details from first item or request
     const firstItem = items[0] || {};
-    const farmerId = firstItem.farmerId || 'farmer-1';
-    const farmerName = firstItem.farmerName || 'Ramesh Patel';
+    const farmerId = reqFarmerId || firstItem.farmerId || 'farmer-1';
+    const farmerName = reqFarmerName || firstItem.farmerName || 'Ramesh Patel';
 
-    const orderId = `ORD-${Math.floor(1000 + Math.random() * 9000)}`;
+    // Preserve client order ID if provided so client and server share the exact same ID
+    const orderId = id || `ORD-${Math.floor(1000 + Math.random() * 9000)}`;
 
     const newOrder = await dataStore.createOrder({
       id: orderId,
-      date: new Date().toISOString().split('T')[0],
+      date: reqDate || new Date().toISOString().split('T')[0],
       customerName: customerName || (req.user ? req.user.name : 'AgriConnect Buyer'),
       customerEmail: customerEmail || (req.user ? req.user.email : 'buyer@example.com'),
       customerPhone: customerPhone || (req.user ? req.user.phone : '+91 98765 43210'),
@@ -91,7 +101,7 @@ export async function createOrder(req, res) {
       deliveryFee,
       discount: discountVal,
       total,
-      status: 'Pending',
+      status: reqStatus || 'Pending',
       paymentMethod: paymentMethod || 'Direct Farm Pay (COD / UPI)',
     });
 
@@ -115,7 +125,7 @@ export async function createOrder(req, res) {
 export async function updateOrderStatus(req, res) {
   try {
     const { id } = req.params;
-    const { status } = req.body;
+    const { status, order: fullOrder } = req.body;
 
     const validStatuses = ['Pending', 'Accepted', 'Dispatched', 'Delivered', 'Rejected'];
     if (!validStatuses.includes(status)) {
@@ -125,7 +135,17 @@ export async function updateOrderStatus(req, res) {
       });
     }
 
-    const updated = await dataStore.updateOrderStatus(id, status);
+    let updated = await dataStore.updateOrderStatus(id, status);
+
+    // If order was not found in dataStore but fullOrder is provided, upsert it!
+    if (!updated && fullOrder) {
+      updated = await dataStore.createOrder({
+        ...fullOrder,
+        id,
+        status,
+      });
+    }
+
     if (!updated) {
       return res.status(404).json({
         success: false,
@@ -139,6 +159,7 @@ export async function updateOrderStatus(req, res) {
       order: updated,
     });
   } catch (error) {
+    console.error('Error updating order status:', error);
     return res.status(500).json({
       success: false,
       message: 'Failed to update order status.',
