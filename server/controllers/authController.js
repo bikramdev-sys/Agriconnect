@@ -7,7 +7,7 @@ import { sendFarmerRegistrationNotification } from '../services/emailService.js'
 // @access  Public
 export async function register(req, res) {
   try {
-    const { name, email, password, role, phone, location, farmName, buyerType, bio, specialties } = req.body;
+    const { name, email, password, role, phone, location, farmName, buyerType, bio, specialties, avatar } = req.body;
 
     if (!name || !email || !password) {
       return res.status(400).json({
@@ -36,6 +36,10 @@ export async function register(req, res) {
       });
     }
 
+    // Use uploaded custom avatar if provided, otherwise default to a personalized cartoon avatar
+    const defaultCartoonAvatar = `https://api.dicebear.com/7.x/adventurer/svg?seed=${encodeURIComponent(name)}&backgroundColor=b6e3f4,c0aede,d1d4f9,ffd5dc,ffdfbf`;
+    const finalAvatar = avatar && typeof avatar === 'string' && avatar.trim() ? avatar.trim() : defaultCartoonAvatar;
+
     console.log(`\n🔑 [PUBLIC AUTH] Registration attempt: ${email} as ${assignedRole.toUpperCase()}`);
     // Create user (Farmers default to verified: false until approved by Admin)
     const newUser = await dataStore.createUser({
@@ -49,9 +53,7 @@ export async function register(req, res) {
       buyerType: buyerType || 'Individual Customer',
       bio: bio || '',
       specialties: specialties || ['Vegetables'],
-      avatar: isFarmer
-        ? 'https://images.unsplash.com/photo-1595273670150-bd0c3c392e46?auto=format&fit=crop&w=200&q=80'
-        : 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80',
+      avatar: finalAvatar,
       verified: isFarmer ? false : true, // Farmers require admin verification
     });
 

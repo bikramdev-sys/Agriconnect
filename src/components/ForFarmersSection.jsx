@@ -97,7 +97,7 @@ export default function ForFarmersSection() {
           >
             <div className="relative rounded-3xl overflow-hidden border border-forest-800 shadow-2xl">
               <img
-                src="https://images.unsplash.com/photo-1595273670150-bd0c3c392e46?auto=format&fit=crop&w=800&q=80"
+                src="https://images.unsplash.com/photo-1595475207225-428b62bda831?auto=format&fit=crop&w=800&q=80"
                 alt="Farmer harvesting fresh crops"
                 className="w-full h-[440px] object-cover"
               />

@@ -34,7 +34,7 @@ const userSchema = new mongoose.Schema(
     },
     avatar: {
       type: String,
-      default: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80',
+      default: 'https://api.dicebear.com/7.x/adventurer/svg?seed=Farmer&backgroundColor=b6e3f4,c0aede,d1d4f9,ffd5dc,ffdfbf',
     },
     // Farmer specific fields
     farmName: {

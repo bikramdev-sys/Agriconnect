@@ -15,6 +15,7 @@ import {
 import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
 import Logo from './Logo';
+import { getUserAvatar } from '../utils/avatar';
 
 export default function Navbar({ onOpenSearch }) {
   const { user, isAuthenticated, isFarmer, isBuyer, isAdmin, logout, switchRole } = useAuth();
@@ -145,7 +146,7 @@ export default function Navbar({ onOpenSearch }) {
                   className="flex items-center space-x-1.5 p-1 sm:pr-2.5 rounded-xl border border-forest-200 hover:bg-forest-50 transition-colors focus:outline-none"
                 >
                   <img
-                    src={user?.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80'}
+                    src={getUserAvatar(user)}
                     alt={user?.name}
                     className="w-7 h-7 rounded-lg object-cover border border-forest-300"
                   />

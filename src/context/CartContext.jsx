@@ -351,7 +351,7 @@ export function CartProvider({ children }) {
       unit: newProdData.unit || 'kg',
       farmerId: newProdData.farmerId || 'farmer-1',
       farmerName: newProdData.farmerName || 'Ramesh Patel',
-      farmerAvatar: newProdData.farmerAvatar || 'https://images.unsplash.com/photo-1595273670150-bd0c3c392e46?auto=format&fit=crop&w=150&q=80',
+      farmerAvatar: newProdData.farmerAvatar || 'https://images.unsplash.com/photo-1595475207225-428b62bda831?auto=format&fit=crop&w=150&q=80',
       location: newProdData.location || 'Nashik, Maharashtra',
       state: newProdData.state || 'Maharashtra',
       isOrganic: Boolean(newProdData.isOrganic),

@@ -123,7 +123,7 @@ export default function ForFarmers() {
       crops: 'Grapes & Pomegranates',
       quote: 'Before AgriConnect, we had to dump excess produce at the APMC yard for whatever price brokers dictated. Now I set my rate 3 weeks before harvest, and Mumbai gourmet stores buy every crate.',
       extraIncome: '+₹2,85,000 / season',
-      avatar: 'https://images.unsplash.com/photo-1595273670150-bd0c3c392e46?auto=format&fit=crop&w=300&q=80'
+      avatar: 'https://images.unsplash.com/photo-1595475207225-428b62bda831?auto=format&fit=crop&w=400&q=80'
     },
     {
       name: 'Gurpreet Singh',
@@ -132,7 +132,7 @@ export default function ForFarmers() {
       crops: 'Certified Organic Wheat & Basmati',
       quote: 'Direct connection with retail grocers in Delhi eliminated 4 middlemen tiers. Payment reflects in my bank account on the exact day of pickup. No tension, only growth.',
       extraIncome: '+₹3,40,000 / crop cycle',
-      avatar: 'https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=300&q=80'
+      avatar: 'https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?auto=format&fit=crop&w=400&q=80'
     },
     {
       name: 'Lakshmi Narayanan',
@@ -141,7 +141,7 @@ export default function ForFarmers() {
       crops: 'Cold-Climate Carrots & Broccoli',
       quote: 'The price radar tool gave me the confidence to reject undervalued broker bids. We now supply 15 restaurant groups in Bengaluru with predictable weekly contracts.',
       extraIncome: '+₹1,95,000 / month',
-      avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&q=80'
+      avatar: 'https://images.unsplash.com/photo-1567427017947-545c5f8d16ad?auto=format&fit=crop&w=400&q=80'
     }
   ];
 
@@ -463,19 +463,22 @@ export default function ForFarmers() {
             {farmerStories.map((story, idx) => (
               <div
                 key={idx}
-                className="p-7 rounded-3xl bg-forest-950/80 border border-forest-800 flex flex-col justify-between"
+                className="p-6 sm:p-7 rounded-3xl bg-forest-950/90 border border-forest-800/90 flex flex-col justify-between shadow-xl hover:border-forest-700 transition-all"
               >
                 <div>
-                  <div className="flex items-center space-x-3.5 mb-5">
+                  <div className="flex items-center space-x-4 mb-5">
                     <img
                       src={story.avatar}
                       alt={story.name}
-                      className="w-13 h-13 rounded-2xl object-cover border border-forest-700"
+                      className="w-16 h-16 shrink-0 rounded-2xl object-cover border-2 border-forest-700 shadow-md ring-1 ring-forest-500/20"
                     />
-                    <div>
-                      <h4 className="font-display font-bold text-base text-white">{story.name}</h4>
-                      <p className="text-xs text-fresh">{story.farm}</p>
-                      <p className="text-[11px] text-gray-400">{story.location}</p>
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center space-x-1.5">
+                        <h4 className="font-display font-bold text-base text-white truncate">{story.name}</h4>
+                        <CheckCircle2 className="w-4 h-4 text-fresh shrink-0" title="Verified Producer" />
+                      </div>
+                      <p className="text-xs text-fresh font-medium truncate mt-0.5">{story.farm}</p>
+                      <p className="text-[11px] text-gray-400 truncate">{story.location}</p>
                     </div>
                   </div>
 
@@ -484,9 +487,9 @@ export default function ForFarmers() {
                   </p>
                 </div>
 
-                <div className="pt-4 border-t border-forest-800 flex items-center justify-between text-xs">
-                  <span className="text-gray-400">Crop: {story.crops}</span>
-                  <span className="font-extrabold text-accent-yellow">{story.extraIncome}</span>
+                <div className="pt-4 border-t border-forest-800/80 flex items-center justify-between text-xs">
+                  <span className="text-gray-400 truncate max-w-[55%]">Crop: {story.crops}</span>
+                  <span className="font-extrabold text-accent-yellow shrink-0">{story.extraIncome}</span>
                 </div>
               </div>
             ))}

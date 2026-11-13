@@ -53,6 +53,7 @@ import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
 import { api } from '../services/api';
 import Logo from '../components/Logo';
+import { getUserAvatar, getCartoonAvatar } from '../utils/avatar';
 
 export default function AdminDashboard() {
  const { user, logout } = useAuth();
@@ -224,7 +225,7 @@ export default function AdminDashboard() {
  farmName: u.farmName || `${u.name}'s Organic Farm`,
  location: u.location || 'India',
  phone: u.phone || '',
- avatar: u.avatar || 'https://images.unsplash.com/photo-1595273670150-bd0c3c392e46?auto=format&fit=crop&w=200&q=80',
+ avatar: getUserAvatar(u, 'farmer'),
  verified: Boolean(u.verified),
  rating: 5.0,
  totalProduce: 0,
@@ -458,7 +459,7 @@ export default function AdminDashboard() {
       <div className="p-3.5 mx-3.5 my-3.5 rounded-xl bg-slate-900/70 hover:bg-slate-900 border border-slate-800 flex items-center space-x-3 transition-colors shadow-2xs">
         <div className="relative shrink-0">
           <img
-            src={user?.avatar || 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=200&q=80'}
+            src={getUserAvatar(user, 'admin')}
             alt={user?.name || 'Administrator'}
             className="w-10 h-10 rounded-lg object-cover ring-1 ring-emerald-400/40"
           />
@@ -1902,7 +1903,7 @@ export default function AdminDashboard() {
  <tr key={b.id || b._id} className="hover:bg-forest-50/50">
  <td className="py-3 pl-2 flex items-center space-x-3">
  <img
- src={b.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80'}
+ src={getUserAvatar(b, 'buyer')}
  alt={b.name}
  className="w-9 h-9 rounded-xl object-cover border border-forest-200 shrink-0"
  />

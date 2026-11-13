@@ -19,6 +19,44 @@
       ],
       "verified": true,
       "createdAt": "2026-11-12T06:43:21.267Z"
+    },
+    {
+      "id": "user-1794578114778",
+      "_id": "user-1794578114778",
+      "name": "Rajesh Verma",
+      "email": "rajesh.verma.1794578114609@example.com",
+      "password": "$2b$10$JSiyMzIEp5qRrvyh8FF1xuPnu/5LMwT4NBS5RctXHyycJEt7E3Pf.",
+      "role": "farmer",
+      "phone": "+91 98765 12345",
+      "location": "Varanasi, UP",
+      "farmName": "Verma Organic Green Farms",
+      "buyerType": "Individual Customer",
+      "avatar": "https://api.dicebear.com/7.x/adventurer/svg?seed=Rajesh%20Verma&backgroundColor=b6e3f4,c0aede,d1d4f9,ffd5dc,ffdfbf",
+      "verified": false,
+      "bio": "",
+      "specialties": [
+        "Vegetables"
+      ],
+      "createdAt": "2026-11-13T13:55:14.778Z"
+    },
+    {
+      "id": "user-1794578146312",
+      "_id": "user-1794578146312",
+      "name": "Anjali Patel",
+      "email": "anjali.patel.1794578146208@example.com",
+      "password": "$2b$10$gD/lzSjtUy6s2BDAgJYOweevZjQS8rTG5pf45ZtjUIWXUsyE0Tq2W",
+      "role": "buyer",
+      "phone": "+91 98765 67890",
+      "location": "Ahmedabad, Gujarat",
+      "farmName": "",
+      "buyerType": "Individual Customer",
+      "avatar": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==",
+      "verified": true,
+      "bio": "",
+      "specialties": [
+        "Vegetables"
+      ],
+      "createdAt": "2026-11-13T13:55:46.312Z"
     }
   ],
   "farmers": [
@@ -136,6 +174,27 @@
       "joinedDate": "July 2023",
       "phone": "+91 99090 11442",
       "email": "ananya@vrindavandairy.com"
+    },
+    {
+      "id": "user-1794578114778",
+      "name": "Rajesh Verma",
+      "email": "rajesh.verma.1794578114609@example.com",
+      "farmName": "Verma Organic Green Farms",
+      "location": "Varanasi, UP",
+      "state": "UP",
+      "avatar": "https://api.dicebear.com/7.x/adventurer/svg?seed=Rajesh%20Verma&backgroundColor=b6e3f4,c0aede,d1d4f9,ffd5dc,ffdfbf",
+      "coverImage": "https://images.unsplash.com/photo-1500937386664-56d1dfef3854?auto=format&fit=crop&w=800&q=80",
+      "rating": 5,
+      "reviewsCount": 1,
+      "experienceYears": 1,
+      "specialties": [
+        "Vegetables"
+      ],
+      "bio": "Sustainable farmer on AgriConnect.",
+      "verified": false,
+      "totalHarvestsSold": "0 kg",
+      "joinedDate": "November 2026",
+      "phone": "+91 98765 12345"
     }
   ],
   "products": [

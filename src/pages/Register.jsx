@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { 
   Eye, 
@@ -11,19 +11,30 @@ import {
   Sprout, 
   Store, 
   CheckCircle,
-  ArrowRight
+  CheckCircle2,
+  ArrowRight,
+  Camera,
+  RotateCcw,
+  Sparkles,
+  Upload
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { useAuth } from '../context/AuthContext';
+import { getCartoonAvatar } from '../utils/avatar';
 
 export default function Register() {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const { registerFarmer, registerBuyer } = useAuth();
 
-  const [role, setRole] = useState(searchParams.get('role') === 'farmer' ? 'farmer' : 'farmer');
+  const [role, setRole] = useState(searchParams.get('role') === 'buyer' ? 'buyer' : 'farmer');
   const [showPassword, setShowPassword] = useState(false);
   const [agreedTerms, setAgreedTerms] = useState(true);
+
+  // Profile Picture Upload State
+  const [avatarPreview, setAvatarPreview] = useState('');
+  const [isCustomAvatar, setIsCustomAvatar] = useState(false);
+  const fileInputRef = useRef(null);
 
   // Form fields
   const [formData, setFormData] = useState({
@@ -35,7 +46,8 @@ export default function Register() {
     specialties: ['Vegetables'],
     buyerType: 'Retail Grocery Store',
     password: '',
-    confirmPassword: ''
+    confirmPassword: '',
+    avatar: ''
   });
 
   useEffect(() => {
@@ -56,6 +68,66 @@ export default function Register() {
         return { ...prev, specialties: [...prev.specialties, crop] };
       }
     });
+  };
+
+  // Image Upload with Automatic Canvas Compression
+  const handleImageChange = (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith('image/')) {
+      toast.error('Please choose an image file (PNG, JPG, JPEG, WEBP).');
+      return;
+    }
+
+    if (file.size > 8 * 1024 * 1024) {
+      toast.error('Image size must be under 8MB.');
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        const MAX_DIM = 450;
+        let width = img.width;
+        let height = img.height;
+
+        if (width > height) {
+          if (width > MAX_DIM) {
+            height = Math.round((height * MAX_DIM) / width);
+            width = MAX_DIM;
+          }
+        } else {
+          if (height > MAX_DIM) {
+            width = Math.round((width * MAX_DIM) / height);
+            height = MAX_DIM;
+          }
+        }
+
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, width, height);
+
+        const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.85);
+        setAvatarPreview(compressedDataUrl);
+        setIsCustomAvatar(true);
+        setFormData((prev) => ({ ...prev, avatar: compressedDataUrl }));
+        toast.success('Profile picture selected! 📸');
+      };
+      img.src = event.target.result;
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleResetToCartoon = () => {
+    setIsCustomAvatar(false);
+    setAvatarPreview('');
+    setFormData((prev) => ({ ...prev, avatar: '' }));
+    if (fileInputRef.current) fileInputRef.current.value = '';
+    toast.success('Switched to default cartoon avatar 🎨');
   };
 
   const handleRegister = async (e) => {
@@ -81,12 +153,22 @@ export default function Register() {
       return;
     }
 
+    // Determine final avatar: either custom uploaded photo or personal cartoon avatar
+    const finalAvatar = isCustomAvatar && formData.avatar
+      ? formData.avatar
+      : getCartoonAvatar(formData.name || (role === 'farmer' ? 'Kisan' : 'Buyer'), role);
+
+    const submissionData = {
+      ...formData,
+      avatar: finalAvatar
+    };
+
     try {
       if (role === 'farmer') {
-        await registerFarmer(formData);
+        await registerFarmer(submissionData);
         navigate('/dashboard/farmer');
       } else {
-        await registerBuyer(formData);
+        await registerBuyer(submissionData);
         navigate('/dashboard/buyer');
       }
     } catch (err) {
@@ -132,9 +214,74 @@ export default function Register() {
           </div>
         </div>
 
-        {/* Demo Disclaimer notice */}
-        <div className="mb-6 p-3 rounded-2xl bg-amber-50 border border-amber-200 text-amber-900 text-xs">
-          <strong>Notice:</strong> This is a frontend demo application. Your profile will be saved locally in your browser state for testing. No server database is required.
+        {/* Profile Picture Upload & Cartoon Avatar Preview */}
+        <div className="mb-6 p-4.5 rounded-3xl bg-forest-50/80 border border-forest-200/90 flex flex-col sm:flex-row items-center gap-5 shadow-xs">
+          <div className="relative shrink-0 group">
+            <img
+              src={isCustomAvatar ? avatarPreview : getCartoonAvatar(formData.name || (role === 'farmer' ? 'Kisan' : 'Buyer'), role)}
+              alt="Profile Avatar Preview"
+              className="w-20 h-20 rounded-2xl object-cover border-2 border-forest-300 shadow-md bg-white"
+            />
+            {isCustomAvatar ? (
+              <span className="absolute -bottom-1 -right-1 p-1 bg-emerald-600 text-white rounded-full shadow-xs" title="Custom Photo Uploaded">
+                <CheckCircle2 className="w-3.5 h-3.5" />
+              </span>
+            ) : (
+              <span className="absolute -bottom-1 -right-1 p-1 bg-amber-500 text-white rounded-full shadow-xs" title="Cartoon Avatar Active">
+                <Sparkles className="w-3.5 h-3.5" />
+              </span>
+            )}
+          </div>
+
+          <div className="flex-1 text-center sm:text-left">
+            <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2 mb-1">
+              <label className="text-xs font-bold uppercase tracking-wider text-forest-950">
+                Profile Photo
+              </label>
+              {isCustomAvatar ? (
+                <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-300">
+                  Custom Photo Uploaded ✓
+                </span>
+              ) : (
+                <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-800 border border-amber-300">
+                  Default Cartoon Avatar 🎨
+                </span>
+              )}
+            </div>
+
+            <p className="text-xs text-agriText-muted mb-3">
+              Upload your photo below, or leave it blank to automatically use this cartoon avatar.
+            </p>
+
+            <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2.5">
+              <input
+                type="file"
+                ref={fileInputRef}
+                onChange={handleImageChange}
+                accept="image/*"
+                className="hidden"
+              />
+              <button
+                type="button"
+                onClick={() => fileInputRef.current?.click()}
+                className="inline-flex items-center space-x-1.5 px-3.5 py-2 rounded-xl bg-forest-900 hover:bg-forest-800 text-white text-xs font-bold transition-all shadow-xs"
+              >
+                <Camera className="w-3.5 h-3.5 text-fresh" />
+                <span>{isCustomAvatar ? 'Change Photo' : 'Upload Your Photo'}</span>
+              </button>
+
+              {isCustomAvatar && (
+                <button
+                  type="button"
+                  onClick={handleResetToCartoon}
+                  className="inline-flex items-center space-x-1 px-3 py-2 rounded-xl border border-forest-300 hover:bg-white text-forest-800 text-xs font-semibold transition-all"
+                >
+                  <RotateCcw className="w-3.5 h-3.5 text-forest-600" />
+                  <span>Use Cartoon Avatar</span>
+                </button>
+              )}
+            </div>
+          </div>
         </div>
 
         {/* Form */}
