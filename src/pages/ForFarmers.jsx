@@ -352,16 +352,18 @@ export default function ForFarmers() {
               <div className="flex flex-col sm:flex-row gap-3">
                 <Link
                   to="/register?role=farmer"
-                  className="flex-1 py-3.5 rounded-xl bg-fresh hover:bg-fresh-light text-forest-950 font-extrabold text-sm text-center shadow-md transition-all active:scale-95"
+                  className="flex-1 py-3.5 px-4 rounded-xl bg-fresh hover:bg-fresh-light text-forest-950 font-extrabold text-sm flex items-center justify-center space-x-2 shadow-md hover:shadow-fresh/20 transition-all active:scale-95 group"
                 >
-                  Claim These Earnings Now
+                  <span>Start Selling at Direct Rates</span>
+                  <ArrowRight className="w-4 h-4 text-forest-950 group-hover:translate-x-1 transition-transform" />
                 </Link>
                 <button
                   onClick={handleCelebrate}
-                  className="py-3.5 px-4 rounded-xl bg-forest-800 hover:bg-forest-700 text-white font-bold text-sm transition-all"
+                  className="py-3.5 px-5 rounded-xl bg-forest-800/90 hover:bg-forest-700 text-white font-bold text-sm flex items-center justify-center space-x-1.5 border border-forest-700/80 transition-all active:scale-95 shadow-xs"
                   title="Celebrate savings"
                 >
-                  🎉 Celebrate
+                  <span>🎉</span>
+                  <span>Celebrate</span>
                 </button>
               </div>
 
