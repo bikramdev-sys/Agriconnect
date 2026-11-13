@@ -15,12 +15,31 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// Enable Cross-Origin Resource Sharing
+// Enable Cross-Origin Resource Sharing (Production & Local Development)
+const allowedOrigins = [
+  process.env.CLIENT_URL,
+  'http://localhost:5173',
+  'http://localhost:3000',
+].filter(Boolean);
+
 app.use(
   cors({
-    origin: '*',
+    origin: (origin, callback) => {
+      if (!origin) return callback(null, true);
+      if (
+        allowedOrigins.length === 0 ||
+        allowedOrigins.includes('*') ||
+        allowedOrigins.includes(origin) ||
+        origin.endsWith('.vercel.app') ||
+        origin.includes('localhost')
+      ) {
+        return callback(null, true);
+      }
+      return callback(null, true);
+    },
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true,
   })
 );
 
@@ -40,6 +59,18 @@ app.use((req, res, next) => {
   });
 
   next();
+});
+
+// Root Server Ping (Ensures Render and uptime checkers detect service as healthy)
+app.get('/', (req, res) => {
+  res.json({
+    status: 'online',
+    service: 'AgriConnect REST API Server',
+    environment: process.env.NODE_ENV || 'production',
+    health: '/api/health',
+    docs: '/api',
+    timestamp: new Date().toISOString(),
+  });
 });
 
 // Connect to Database

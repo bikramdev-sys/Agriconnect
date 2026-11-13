@@ -1,6 +1,20 @@
 // Centralized API Client for AgriConnect
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || '/api';
+function getBaseUrl() {
+  const envUrl = (import.meta.env.VITE_API_URL || '').trim();
+  if (!envUrl) {
+    return '/api';
+  }
+  // Remove trailing slashes
+  const cleanUrl = envUrl.replace(/\/+$/, '');
+  // If user entered backend host without /api (e.g. https://agriconnect.onrender.com), append /api
+  if (cleanUrl.startsWith('http') && !cleanUrl.endsWith('/api')) {
+    return `${cleanUrl}/api`;
+  }
+  return cleanUrl;
+}
+
+const API_BASE_URL = getBaseUrl();
 
 function getAuthHeaders() {
   const token = localStorage.getItem('agriconnect_token');
@@ -14,7 +28,8 @@ function getAuthHeaders() {
 }
 
 async function request(endpoint, options = {}) {
-  const url = `${API_BASE_URL}${endpoint}`;
+  const cleanEndpoint = endpoint.startsWith('/') ? endpoint : `/${endpoint}`;
+  const url = `${API_BASE_URL}${cleanEndpoint}`;
   const headers = {
     ...getAuthHeaders(),
     ...(options.headers || {}),

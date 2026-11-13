@@ -218,6 +218,8 @@ export async function sendFarmerRegistrationNotification({
   specialties,
 }) {
   const targetEmail = process.env.ADMIN_EMAIL || 'bikramdevsaw9@gmail.com';
+  const clientBase = (process.env.CLIENT_URL || 'http://localhost:5173').replace(/\/+$/, '');
+  const adminPortalUrl = `${clientBase}/dashboard/admin`;
   const formattedTime = new Date().toLocaleString('en-IN', {
     timeZone: 'Asia/Kolkata',
     dateStyle: 'full',
@@ -283,7 +285,7 @@ export async function sendFarmerRegistrationNotification({
       </div>
 
       <div style="background: #fffbeb; border: 1px solid #fef3c7; border-left: 4px solid #f59e0b; padding: 14px 16px; border-radius: 8px; font-size: 13px; color: #92400e; margin-bottom: 24px;">
-        <strong>Action Needed:</strong> Log into the <a href="http://localhost:5173/dashboard/admin" style="color: #b45309; font-weight: 800;">Admin Dashboard</a> under <strong>Farmers Directory</strong> to review and verify this producer.
+        <strong>Action Needed:</strong> Log into the <a href="${adminPortalUrl}" style="color: #b45309; font-weight: 800;">Admin Dashboard</a> under <strong>Farmers Directory</strong> to review and verify this producer.
       </div>
     </div>
 
@@ -309,7 +311,7 @@ Status:           PENDING ADMIN VERIFICATION ⏳
 Registered:       ${formattedTime} (IST)
 Admin Desk:       ${targetEmail}
 =========================================
-Please log into the Admin Console (http://localhost:5173/dashboard/admin) to approve this grower.
+Please log into the Admin Console (${adminPortalUrl}) to approve this grower.
   `.trim();
 
   const transporter = createTransporter();

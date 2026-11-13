@@ -11,8 +11,9 @@ export async function connectDB() {
 
   try {
     mongoose.set('strictQuery', false);
+    const timeoutMs = (process.env.NODE_ENV === 'production' || uri.includes('mongodb+srv')) ? 10000 : 3000;
     const conn = await mongoose.connect(uri, {
-      serverSelectionTimeoutMS: 3000, // Timeout fast if local mongod is not running
+      serverSelectionTimeoutMS: timeoutMs,
     });
     isConnected = true;
     console.log(`✅ [MongoDB] Connected to database: ${conn.connection.host}/${conn.connection.name}`);

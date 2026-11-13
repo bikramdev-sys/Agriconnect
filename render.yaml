@@ -1,0 +1,24 @@
+services:
+  - type: web
+    name: agriconnect-api
+    runtime: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: MONGO_URI
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      - key: CLIENT_URL
+        sync: false
+      - key: ADMIN_EMAIL
+        value: bikramdevsaw9@gmail.com
+      - key: WEB3FORMS_ACCESS_KEY
+        value: 36721ff9-419a-4a6a-8f4d-77c17f6ddf52
+
