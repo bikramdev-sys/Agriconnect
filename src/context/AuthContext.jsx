@@ -12,7 +12,7 @@ const DEMO_ADMIN = {
   title: 'Platform Chief Administrator',
   location: 'National Agricultural Directorate, Pune',
   phone: '+91 99887 76655',
-  avatar: 'https://plus.unsplash.com/premium_photo-1791369738920-51b63a38021b?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=NHwxMjA3fDA%3D',
+  avatar: '/avatars/bikram-dev.jpg',
   permissions: ['all_access', 'farmer_verification', 'dispute_resolution', 'analytics', 'pricing_policy']
 };
 
@@ -20,7 +20,15 @@ export function AuthProvider({ children }) {
   const [user, setUser] = useState(() => {
     try {
       const savedUser = localStorage.getItem('agriconnect_user');
-      return savedUser ? JSON.parse(savedUser) : null;
+      if (savedUser) {
+        const parsed = JSON.parse(savedUser);
+        if (parsed?.role === 'admin' || parsed?.id === 'admin-1' || parsed?.name === 'Bikram Dev') {
+          parsed.avatar = '/avatars/bikram-dev.jpg';
+          return parsed;
+        }
+        return parsed;
+      }
+      return null;
     } catch {
       return null;
     }

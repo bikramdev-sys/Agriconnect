@@ -16,6 +16,7 @@ export function getCartoonAvatar(name = 'User', role = 'farmer') {
  * Guarantees every person has ONE and ONLY ONE consistent profile photo across the entire site.
  */
 export const CANONICAL_FARMER_AVATARS = {
+  'Bikram Dev': '/avatars/bikram-dev.jpg',
   'Ramesh Patel': '/avatars/ramesh-patel.jpg',
   'Rameshwar Patil': '/avatars/ramesh-patel.jpg',
   'Lakshmi Devi': '/avatars/lakshmi-devi.jpg',
@@ -38,12 +39,22 @@ export const INDIAN_FARMER_PHOTOS = [
 
 /**
  * Returns a valid avatar for a user:
- * 1. Checks canonical farmer mapping by name.
- * 2. Checks custom uploaded photo or non-western avatar if present.
- * 3. Falls back to consistent cartoon avatar.
+ * 1. Checks administrator & Bikram Dev canonical photo.
+ * 2. Checks canonical farmer mapping by name.
+ * 3. Checks custom uploaded photo or non-western avatar if present.
+ * 4. Falls back to consistent cartoon avatar.
  */
 export function getUserAvatar(user, fallbackRole = 'farmer') {
   const name = user?.name || (typeof user === 'string' ? user : '');
+
+  // Platform Administrator & Founder canonical portrait
+  if (name === 'Bikram Dev' || name.toLowerCase().includes('bikram')) {
+    return '/avatars/bikram-dev.jpg';
+  }
+
+  if (user?.role === 'admin' || fallbackRole === 'admin') {
+    return user?.avatar && !user.avatar.includes('unsplash.com') ? user.avatar : '/avatars/bikram-dev.jpg';
+  }
 
   if (name && CANONICAL_FARMER_AVATARS[name]) {
     return CANONICAL_FARMER_AVATARS[name];

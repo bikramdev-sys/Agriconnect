@@ -66,28 +66,29 @@ export default function About() {
 
   const team = [
     {
-      name: 'Dr. Vikramaditya Joshi',
-      role: 'Co-Founder & Agronomy Director',
-      bio: 'Ph.D. in Soil Science (IARI). 16+ years pioneering regenerative farming systems and farmer producer cooperatives in Western India.',
-      avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80'
+      name: 'Bikram Dev',
+      role: 'Founder & Lead Developer',
+      bio: 'Full-stack software engineer and visionary founder behind AgriConnect. Built the platform from the ground up to eliminate predatory middlemen, guarantee transparent mandi pricing for Indian farmers, and deliver fresh, chemical-free harvests directly to consumers across the nation.',
+      avatar: '/avatars/bikram-dev.jpg',
+      isFounder: true
     },
     {
       name: 'Ananya Deshmukh',
       role: 'Co-Founder & Chief Product Officer',
       bio: 'Former supply-chain architect at top agricultural logistics platforms. Passionate about empowering rural smartphone users with effortless interfaces.',
-      avatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&q=80'
+      avatar: '/avatars/ananya-sharma.jpg'
     },
     {
       name: 'Harpreet Singh Sandhu',
       role: 'Head of Rural Operations & Kisan Relations',
       bio: 'Third-generation farmer from Ludhiana. Manages our 14 regional field collection hubs and farmer onboarding networks.',
-      avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&q=80'
+      avatar: '/avatars/gurpreet-singh.jpg'
     },
     {
       name: 'Priyanka Nambiar',
       role: 'Head of Quality & Organic Compliance',
       bio: 'Certified organic auditor and food safety specialist ensuring residue-free, chemical-free standards across our grower network.',
-      avatar: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=300&q=80'
+      avatar: '/avatars/lakshmi-devi.jpg'
     }
   ];
 
@@ -276,14 +277,29 @@ export default function About() {
             {team.map((member, idx) => (
               <div
                 key={idx}
-                className="bg-white rounded-3xl p-6 border border-forest-100 shadow-soft flex flex-col justify-between"
+                className={`bg-white rounded-3xl p-6 border shadow-soft flex flex-col justify-between transition-all duration-300 hover:-translate-y-1 ${
+                  member.isFounder
+                    ? 'border-emerald-500/40 ring-2 ring-emerald-500/20 bg-gradient-to-b from-emerald-50/40 via-white to-white'
+                    : 'border-forest-100'
+                }`}
               >
                 <div>
-                  <img
-                    src={member.avatar}
-                    alt={member.name}
-                    className="w-20 h-20 rounded-2xl object-cover mb-4 border border-forest-200"
-                  />
+                  <div className="relative inline-block mb-4">
+                    <img
+                      src={member.avatar}
+                      alt={member.name}
+                      className={`w-20 h-20 rounded-2xl object-cover border-2 shadow-xs ${
+                        member.isFounder
+                          ? 'border-emerald-500/60 ring-2 ring-emerald-400/30'
+                          : 'border-forest-200'
+                      }`}
+                    />
+                    {member.isFounder && (
+                      <span className="absolute -bottom-2.5 left-1/2 -translate-x-1/2 px-2.5 py-0.5 rounded-full bg-forest-950 text-fresh text-[9px] font-black uppercase tracking-wider border border-forest-800 shadow-xs whitespace-nowrap">
+                        Founder
+                      </span>
+                    )}
+                  </div>
                   <h4 className="font-display font-bold text-lg text-forest-950">
                     {member.name}
                   </h4>

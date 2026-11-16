@@ -33,6 +33,7 @@ import {
 import toast from 'react-hot-toast';
 import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
+import { getUserAvatar } from '../utils/avatar';
 
 export default function FarmerDashboard() {
   const { user, logout } = useAuth();
@@ -213,7 +214,7 @@ export default function FarmerDashboard() {
         <div className="bg-white rounded-3xl p-6 sm:p-8 border border-forest-100 shadow-soft mb-8 flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="flex items-center space-x-4">
             <img
-              src={user?.avatar || 'https://images.unsplash.com/photo-1595273670150-bd0c3c392e46?auto=format&fit=crop&w=200&q=80'}
+              src={getUserAvatar(user, 'farmer')}
               alt={user?.name || 'Farmer'}
               className="w-16 h-16 rounded-2xl object-cover border-2 border-forest-300 shadow-xs"
             />

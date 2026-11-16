@@ -28,6 +28,7 @@ import {
 } from 'recharts';
 import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
+import { getUserAvatar } from '../utils/avatar';
 import ProductCard from '../components/ProductCard';
 
 export default function BuyerDashboard() {
@@ -99,7 +100,7 @@ export default function BuyerDashboard() {
         <div className="bg-white rounded-3xl p-6 sm:p-8 border border-forest-100 shadow-soft mb-8 flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="flex items-center space-x-4">
             <img
-              src={user?.avatar || 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=200&q=80'}
+              src={getUserAvatar(user, 'buyer')}
               alt={user?.name || 'Buyer'}
               className="w-16 h-16 rounded-2xl object-cover border-2 border-forest-300 shadow-xs"
             />

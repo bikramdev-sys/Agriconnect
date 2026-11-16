@@ -47,6 +47,7 @@ export async function verifyToken(req, res, next) {
       title: 'Platform Chief Administrator',
       location: 'National Agricultural Directorate, Pune',
       phone: '+91 99887 76655',
+      avatar: '/avatars/bikram-dev.jpg',
       permissions: ['all_access', 'farmer_verification', 'dispute_resolution', 'analytics', 'pricing_policy'],
     };
     return next();
@@ -64,6 +65,7 @@ export async function verifyToken(req, res, next) {
           name: decoded.name || 'Bikram Dev',
           email: decoded.email || 'admin@agriconnect.org',
           role: 'admin',
+          avatar: '/avatars/bikram-dev.jpg',
           permissions: ['all_access'],
         };
         return next();
@@ -123,6 +125,7 @@ export async function optionalVerifyToken(req, res, next) {
       name: 'Bikram Dev',
       email: 'admin@agriconnect.org',
       role: 'admin',
+      avatar: '/avatars/bikram-dev.jpg',
       permissions: ['all_access'],
     };
     return next();
@@ -137,6 +140,7 @@ export async function optionalVerifyToken(req, res, next) {
         name: user.name,
         email: user.email,
         role: user.role,
+        avatar: user.avatar || '/avatars/bikram-dev.jpg',
       };
     } else if (decoded.role === 'admin' || decoded.id === 'admin-1') {
       req.user = {
@@ -144,6 +148,7 @@ export async function optionalVerifyToken(req, res, next) {
         name: decoded.name || 'Bikram Dev',
         email: decoded.email || 'admin@agriconnect.org',
         role: 'admin',
+        avatar: '/avatars/bikram-dev.jpg',
       };
     } else {
       req.user = null;
