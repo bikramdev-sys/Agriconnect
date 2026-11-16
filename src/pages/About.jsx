@@ -11,10 +11,12 @@ import {
   CheckCircle2, 
   ArrowRight, 
   Target, 
-  Award,
-  BookOpen,
-  MapPin,
-  Compass
+  Award, 
+  BookOpen, 
+  MapPin, 
+  Compass,
+  Sparkles,
+  Code2
 } from 'lucide-react';
 
 export default function About() {
@@ -64,33 +66,21 @@ export default function About() {
     }
   ];
 
-  const team = [
-    {
-      name: 'Bikram Dev',
-      role: 'Founder & Lead Developer',
-      bio: 'Full-stack software engineer and visionary founder behind AgriConnect. Built the platform from the ground up to eliminate predatory middlemen, guarantee transparent mandi pricing for Indian farmers, and deliver fresh, chemical-free harvests directly to consumers across the nation.',
-      avatar: '/avatars/bikram-dev.jpg',
-      isFounder: true
-    },
-    {
-      name: 'Ananya Deshmukh',
-      role: 'Co-Founder & Chief Product Officer',
-      bio: 'Former supply-chain architect at top agricultural logistics platforms. Passionate about empowering rural smartphone users with effortless interfaces.',
-      avatar: '/avatars/ananya-sharma.jpg'
-    },
-    {
-      name: 'Harpreet Singh Sandhu',
-      role: 'Head of Rural Operations & Kisan Relations',
-      bio: 'Third-generation farmer from Ludhiana. Manages our 14 regional field collection hubs and farmer onboarding networks.',
-      avatar: '/avatars/gurpreet-singh.jpg'
-    },
-    {
-      name: 'Priyanka Nambiar',
-      role: 'Head of Quality & Organic Compliance',
-      bio: 'Certified organic auditor and food safety specialist ensuring residue-free, chemical-free standards across our grower network.',
-      avatar: '/avatars/lakshmi-devi.jpg'
-    }
-  ];
+  const founder = {
+    name: 'Bikram Dev',
+    role: 'Founder & Lead Developer',
+    title: 'Full-Stack Software Engineer & Agritech Architect',
+    bio: 'Full-stack software engineer and visionary founder behind AgriConnect. Built the platform from the ground up to eliminate predatory middlemen, guarantee transparent mandi pricing for Indian farmers, and deliver fresh, chemical-free harvests directly to consumers across the nation.',
+    mission: "Driven by a deep personal commitment to rural prosperity, Bikram engineered AgriConnect's direct farm-to-doorstep ecosystem, real-time dual settlement engine, and fair price radar to ensure that India's hardworking growers retain 100% of their rightful harvest value.",
+    avatar: '/avatars/bikram-dev.jpg',
+    location: 'National Agricultural Directorate • India',
+    badges: [
+      'Full-Stack Agritech System Architecture',
+      '0% Middleman Fair Trade Protocol',
+      'Direct Farm-to-Doorstep Logistics Grid',
+      'Real-Time Mandi Settlement & Traceability'
+    ]
+  };
 
   return (
     <div className="min-h-screen bg-[#FAFAF5]">
@@ -263,55 +253,99 @@ export default function About() {
         </div>
       </section>
 
-      {/* 6. Meet Our Agritech & Operations Leadership */}
-      <section className="py-20 bg-forest-50/60 border-t border-forest-100">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      {/* 6. Founder Spotlight: Committed to Rural Prosperity */}
+      <section className="py-20 bg-forest-50/60 border-t border-forest-100 relative overflow-hidden">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           
-          <div className="text-center max-w-2xl mx-auto mb-16">
-            <h2 className="font-display font-extrabold text-3xl sm:text-4xl text-forest-950">
-              Leadership Committed to Rural Prosperity
+          <div className="text-center max-w-2xl mx-auto mb-14">
+            <div className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-forest-100/90 border border-forest-200/90 text-forest-900 text-xs font-bold uppercase tracking-wider mb-4 shadow-2xs">
+              <Sparkles className="w-3.5 h-3.5 text-fresh" />
+              <span>Vision & Technical Leadership</span>
+            </div>
+            <h2 className="font-display font-extrabold text-3xl sm:text-4xl lg:text-5xl text-forest-950 tracking-tight">
+              Founder Committed to Rural Prosperity
             </h2>
+            <p className="text-xs sm:text-sm text-agriText-muted mt-3 max-w-lg mx-auto leading-relaxed">
+              Engineering a transparent, middleman-free agricultural future that empowers India's local farmers and connects them directly with conscious buyers.
+            </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {team.map((member, idx) => (
-              <div
-                key={idx}
-                className={`bg-white rounded-3xl p-6 border shadow-soft flex flex-col justify-between transition-all duration-300 hover:-translate-y-1 ${
-                  member.isFounder
-                    ? 'border-emerald-500/40 ring-2 ring-emerald-500/20 bg-gradient-to-b from-emerald-50/40 via-white to-white'
-                    : 'border-forest-100'
-                }`}
-              >
-                <div>
-                  <div className="relative inline-block mb-4">
-                    <img
-                      src={member.avatar}
-                      alt={member.name}
-                      className={`w-20 h-20 rounded-2xl object-cover border-2 shadow-xs ${
-                        member.isFounder
-                          ? 'border-emerald-500/60 ring-2 ring-emerald-400/30'
-                          : 'border-forest-200'
-                      }`}
-                    />
-                    {member.isFounder && (
-                      <span className="absolute -bottom-2.5 left-1/2 -translate-x-1/2 px-2.5 py-0.5 rounded-full bg-forest-950 text-fresh text-[9px] font-black uppercase tracking-wider border border-forest-800 shadow-xs whitespace-nowrap">
-                        Founder
-                      </span>
-                    )}
-                  </div>
-                  <h4 className="font-display font-bold text-lg text-forest-950">
-                    {member.name}
-                  </h4>
-                  <p className="text-xs font-semibold text-forest-700 mb-3">
-                    {member.role}
-                  </p>
-                  <p className="text-agriText-muted text-xs leading-relaxed">
-                    {member.bio}
-                  </p>
+          <div className="max-w-4xl mx-auto bg-white rounded-3xl p-6 sm:p-10 lg:p-12 border border-emerald-500/30 ring-1 ring-emerald-500/15 shadow-premium relative overflow-hidden">
+            {/* Ambient Corner Glows */}
+            <div className="absolute -top-24 -right-24 w-72 h-72 bg-fresh/15 rounded-full blur-3xl pointer-events-none" />
+            <div className="absolute -bottom-24 -left-24 w-72 h-72 bg-forest-600/15 rounded-full blur-3xl pointer-events-none" />
+
+            <div className="relative z-10 flex flex-col md:flex-row items-center md:items-start gap-8 lg:gap-12">
+              {/* Founder Portrait & Identity */}
+              <div className="flex flex-col items-center shrink-0">
+                <div className="relative mb-3 group">
+                  <img
+                    src={founder.avatar}
+                    alt={founder.name}
+                    className="w-40 h-40 sm:w-48 sm:h-48 rounded-3xl object-cover border-4 border-white shadow-xl ring-4 ring-emerald-500/25 transition-transform duration-300 group-hover:scale-102"
+                  />
+                  <span className="absolute -bottom-3 left-1/2 -translate-x-1/2 px-3.5 py-1 rounded-full bg-forest-950 text-fresh text-[10px] font-black uppercase tracking-wider border border-forest-800 shadow-md whitespace-nowrap">
+                    Founder
+                  </span>
+                </div>
+                <div className="flex items-center gap-1.5 text-xs font-semibold text-agriText-muted mt-4">
+                  <MapPin className="w-3.5 h-3.5 text-forest-700 shrink-0" />
+                  <span>{founder.location}</span>
                 </div>
               </div>
-            ))}
+
+              {/* Founder Story & Architecture Details */}
+              <div className="flex-1 text-center md:text-left">
+                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 border border-emerald-200/80 text-emerald-800 text-[11px] font-bold uppercase tracking-wider mb-2">
+                  <Code2 className="w-3.5 h-3.5 text-fresh" />
+                  <span>Platform Creator & Lead Architect</span>
+                </div>
+
+                <h3 className="font-display font-black text-2xl sm:text-3xl lg:text-4xl text-forest-950">
+                  {founder.name}
+                </h3>
+                <p className="text-xs sm:text-sm font-bold text-forest-700 mb-4">
+                  {founder.role} • {founder.title}
+                </p>
+
+                <p className="text-xs sm:text-sm text-forest-900 leading-relaxed font-medium mb-3">
+                  {founder.bio}
+                </p>
+                <p className="text-xs sm:text-sm text-agriText-muted leading-relaxed mb-6">
+                  {founder.mission}
+                </p>
+
+                {/* Key Architectural Pillars */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 mb-8">
+                  {founder.badges.map((b, i) => (
+                    <div
+                      key={i}
+                      className="flex items-center space-x-2.5 p-3 rounded-2xl bg-forest-50/70 border border-forest-100 text-xs font-bold text-forest-900"
+                    >
+                      <CheckCircle2 className="w-4 h-4 text-fresh shrink-0" />
+                      <span>{b}</span>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Action CTAs */}
+                <div className="flex flex-wrap items-center justify-center md:justify-start gap-3">
+                  <Link
+                    to="/contact"
+                    className="px-5 py-2.5 rounded-xl bg-forest-900 hover:bg-forest-800 text-white text-xs font-bold shadow-sm inline-flex items-center space-x-2 transition-all active:scale-95"
+                  >
+                    <span>Contact Platform Creator</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </Link>
+                  <Link
+                    to="/marketplace"
+                    className="px-5 py-2.5 rounded-xl border border-forest-200 hover:bg-forest-50 text-forest-900 text-xs font-bold transition-all"
+                  >
+                    <span>Explore Direct Marketplace</span>
+                  </Link>
+                </div>
+              </div>
+            </div>
           </div>
 
         </div>
