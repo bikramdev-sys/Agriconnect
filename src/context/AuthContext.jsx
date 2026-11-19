@@ -4,18 +4,6 @@ import { api } from '../services/api';
 
 const AuthContext = createContext();
 
-const DEMO_ADMIN = {
-  id: 'admin-1',
-  name: 'Bikram Dev',
-  email: 'admin@agriconnect.org',
-  role: 'admin',
-  title: 'Platform Chief Administrator',
-  location: 'National Agricultural Directorate, Pune',
-  phone: '+91 99887 76655',
-  avatar: '/avatars/bikram-dev.jpg',
-  permissions: ['all_access', 'farmer_verification', 'dispute_resolution', 'analytics', 'pricing_policy']
-};
-
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(() => {
     try {
@@ -128,7 +116,7 @@ export function AuthProvider({ children }) {
     }
   };
 
-  // Dedicated Hidden Admin Login
+  // Dedicated Hidden Admin Login (Authenticated exclusively via server API & Bcrypt)
   const adminLogin = async (email, password) => {
     try {
       const res = await api.admin.login(email, password);
@@ -141,23 +129,9 @@ export function AuthProvider({ children }) {
       throw new Error(res.message || 'Administrative verification failed.');
     } catch (err) {
       console.warn('Backend admin login validation:', err.message);
-      if (err.status === 401 || err.status === 403) {
-        toast.error(err.message || 'Access Denied: Invalid administrator credentials.');
-        throw err;
-      }
-
-      // Offline fallback: ONLY exact Bikram Dev credentials if the server is offline
-      const cleanEmail = (email || '').trim().toLowerCase();
-      if (cleanEmail === 'admin@agriconnect.org' && password === 'admin123') {
-        setUser(DEMO_ADMIN);
-        const adminTok = 'offline-admin-session-token';
-        setToken(adminTok);
-        localStorage.setItem('agriconnect_token', adminTok);
-        toast.success('Clearance Verified. Welcome Chief Admin Bikram Dev! 🛡️');
-        return DEMO_ADMIN;
-      }
-      toast.error('Access Denied: Invalid administrator credentials.');
-      throw new Error('Access Denied: Invalid administrator credentials.');
+      const errorMessage = err.message || 'Access Denied: Invalid administrator credentials.';
+      toast.error(errorMessage);
+      throw new Error(errorMessage);
     }
   };
 

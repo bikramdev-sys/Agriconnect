@@ -472,7 +472,7 @@ export default function AdminDashboard() {
               ROOT
             </span>
           </div>
-          <p className="text-[11px] text-slate-400 truncate mt-0.5 font-sans">{user?.email || 'admin@agriconnect.org'}</p>
+          <p className="text-[11px] text-slate-400 truncate mt-0.5 font-sans">{user?.email || 'Administrator'}</p>
           <p className="text-[10px] text-emerald-400 font-medium mt-0.5">National Directorate</p>
         </div>
       </div>

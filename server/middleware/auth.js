@@ -47,7 +47,7 @@ export async function verifyToken(req, res, next) {
         req.user = {
           id: 'admin-1',
           name: decoded.name || 'Bikram Dev',
-          email: decoded.email || 'admin@agriconnect.org',
+          email: decoded.email || '',
           role: 'admin',
           avatar: '/avatars/bikram-dev.jpg',
           permissions: ['all_access'],
@@ -118,7 +118,7 @@ export async function optionalVerifyToken(req, res, next) {
       req.user = {
         id: 'admin-1',
         name: decoded.name || 'Bikram Dev',
-        email: decoded.email || 'admin@agriconnect.org',
+        email: decoded.email || '',
         role: 'admin',
         avatar: '/avatars/bikram-dev.jpg',
       };
