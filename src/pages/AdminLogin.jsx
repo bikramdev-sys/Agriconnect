@@ -20,8 +20,8 @@ import { useAuth } from '../context/AuthContext';
 import Logo from '../components/Logo';
 
 export default function AdminLogin() {
-  const [email, setEmail] = useState('admin@agriconnect.org');
-  const [password, setPassword] = useState('admin123');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [errorNotice, setErrorNotice] = useState('');
@@ -56,13 +56,6 @@ export default function AdminLogin() {
     } finally {
       setIsLoading(false);
     }
-  };
-
-  const handleFillDemoAdmin = () => {
-    setEmail('admin@agriconnect.org');
-    setPassword('admin123');
-    setErrorNotice('');
-    toast('Directorate Admin credentials pre-filled.', { icon: '🛡️' });
   };
 
   return (
@@ -125,14 +118,9 @@ export default function AdminLogin() {
               </div>
             </div>
 
-            <button
-              type="button"
-              onClick={handleFillDemoAdmin}
-              className="text-[11px] px-3 py-1.5 rounded-xl bg-emerald-950/90 hover:bg-emerald-900 border border-emerald-600/40 text-emerald-300 font-semibold transition-all active:scale-95 shadow-xs"
-              title="Click to fill pre-configured admin credentials"
-            >
-              Fill Credentials ⚡
-            </button>
+            <span className="text-[10px] font-mono px-2.5 py-1 rounded-full bg-emerald-950/80 border border-emerald-500/30 text-emerald-400 font-bold uppercase tracking-wider">
+              256-Bit Encrypted
+            </span>
           </div>
 
           {/* Error Notice */}
@@ -147,7 +135,7 @@ export default function AdminLogin() {
           )}
 
           {/* Login Form */}
-          <form onSubmit={handleAdminSubmit} className="space-y-4">
+          <form onSubmit={handleAdminSubmit} autoComplete="off" className="space-y-4">
             <div>
               <label className="block text-[11px] font-bold uppercase tracking-wider text-emerald-300/80 mb-1.5">
                 Admin Directorate Email
@@ -156,10 +144,12 @@ export default function AdminLogin() {
                 <Mail className="w-4 h-4 text-emerald-400/60 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
                 <input
                   type="email"
+                  name="admin_login_email"
+                  autoComplete="off"
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="admin@agriconnect.org"
+                  placeholder="Enter Directorate email..."
                   className="w-full pl-10 pr-4 py-3 rounded-2xl bg-[#06110B] border border-emerald-800/50 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-emerald-400 focus:ring-1 focus:ring-emerald-400 transition-all font-mono"
                 />
               </div>
@@ -176,10 +166,12 @@ export default function AdminLogin() {
                 <Lock className="w-4 h-4 text-emerald-400/60 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
                 <input
                   type={showPassword ? 'text' : 'password'}
+                  name="admin_master_password"
+                  autoComplete="new-password"
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  placeholder="••••••••"
+                  placeholder="Enter Master password..."
                   className="w-full pl-10 pr-10 py-3 rounded-2xl bg-[#06110B] border border-emerald-800/50 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-emerald-400 focus:ring-1 focus:ring-emerald-400 transition-all font-mono"
                 />
                 <button

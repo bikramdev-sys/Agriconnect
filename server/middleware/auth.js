@@ -37,22 +37,6 @@ export async function verifyToken(req, res, next) {
     });
   }
 
-  // Pre-approved Admin tokens (offline / fallback / master clearances)
-  if (token === 'demo-admin-token' || token === 'admin-token') {
-    req.user = {
-      id: 'admin-1',
-      name: 'Bikram Dev',
-      email: 'admin@agriconnect.org',
-      role: 'admin',
-      title: 'Platform Chief Administrator',
-      location: 'National Agricultural Directorate, Pune',
-      phone: '+91 99887 76655',
-      avatar: '/avatars/bikram-dev.jpg',
-      permissions: ['all_access', 'farmer_verification', 'dispute_resolution', 'analytics', 'pricing_policy'],
-    };
-    return next();
-  }
-
   try {
     const decoded = jwt.verify(token, JWT_SECRET);
     const user = await dataStore.findUserById(decoded.id);
@@ -116,18 +100,6 @@ export async function optionalVerifyToken(req, res, next) {
 
   if (!token) {
     req.user = null;
-    return next();
-  }
-
-  if (token === 'demo-admin-token' || token === 'admin-token') {
-    req.user = {
-      id: 'admin-1',
-      name: 'Bikram Dev',
-      email: 'admin@agriconnect.org',
-      role: 'admin',
-      avatar: '/avatars/bikram-dev.jpg',
-      permissions: ['all_access'],
-    };
     return next();
   }
 

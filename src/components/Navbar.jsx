@@ -18,7 +18,7 @@ import Logo from './Logo';
 import { getUserAvatar } from '../utils/avatar';
 
 export default function Navbar({ onOpenSearch }) {
-  const { user, isAuthenticated, isFarmer, isBuyer, isAdmin, logout, switchRole } = useAuth();
+  const { user, isAuthenticated, isFarmer, isBuyer, isAdmin, logout } = useAuth();
   const { totalCount, favorites } = useCart();
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);

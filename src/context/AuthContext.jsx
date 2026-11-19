@@ -19,9 +19,20 @@ const DEMO_ADMIN = {
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(() => {
     try {
+      const savedToken = localStorage.getItem('agriconnect_token');
+      // Invalidate any legacy demo tokens immediately on load
+      if (savedToken === 'demo-admin-token' || savedToken === 'admin-token') {
+        localStorage.removeItem('agriconnect_token');
+        localStorage.removeItem('agriconnect_user');
+        return null;
+      }
       const savedUser = localStorage.getItem('agriconnect_user');
       if (savedUser) {
         const parsed = JSON.parse(savedUser);
+        if (parsed?.role === 'admin' && !savedToken) {
+          localStorage.removeItem('agriconnect_user');
+          return null;
+        }
         if (parsed?.role === 'admin' || parsed?.id === 'admin-1' || parsed?.name === 'Bikram Dev') {
           parsed.avatar = '/avatars/bikram-dev.jpg';
           return parsed;
@@ -35,7 +46,12 @@ export function AuthProvider({ children }) {
   });
 
   const [token, setToken] = useState(() => {
-    return localStorage.getItem('agriconnect_token') || null;
+    const savedToken = localStorage.getItem('agriconnect_token');
+    if (savedToken === 'demo-admin-token' || savedToken === 'admin-token') {
+      localStorage.removeItem('agriconnect_token');
+      return null;
+    }
+    return savedToken || null;
   });
 
   const [loading, setLoading] = useState(true);
@@ -63,7 +79,11 @@ export function AuthProvider({ children }) {
       const savedToken = localStorage.getItem('agriconnect_token');
       if (savedToken) {
         if (savedToken === 'demo-admin-token' || savedToken === 'admin-token') {
-          setUser(DEMO_ADMIN);
+          // Force invalidate unauthorized legacy demo tokens
+          localStorage.removeItem('agriconnect_token');
+          localStorage.removeItem('agriconnect_user');
+          setUser(null);
+          setToken(null);
           setLoading(false);
           return;
         }
@@ -74,9 +94,11 @@ export function AuthProvider({ children }) {
           }
         } catch (err) {
           console.warn('Session verification notice (using stored profile):', err.message);
-          if (err.status === 401) {
+          if (err.status === 401 || err.status === 403) {
             setUser(null);
             setToken(null);
+            localStorage.removeItem('agriconnect_token');
+            localStorage.removeItem('agriconnect_user');
           }
         }
       }
@@ -118,22 +140,24 @@ export function AuthProvider({ children }) {
       }
       throw new Error(res.message || 'Administrative verification failed.');
     } catch (err) {
-      console.warn('Backend admin login fallback:', err.message);
+      console.warn('Backend admin login validation:', err.message);
       if (err.status === 401 || err.status === 403) {
         toast.error(err.message || 'Access Denied: Invalid administrator credentials.');
         throw err;
       }
 
-      if (email.toLowerCase().includes('admin')) {
+      // Offline fallback: ONLY exact Bikram Dev credentials if the server is offline
+      const cleanEmail = (email || '').trim().toLowerCase();
+      if (cleanEmail === 'admin@agriconnect.org' && password === 'admin123') {
         setUser(DEMO_ADMIN);
-        const adminTok = 'demo-admin-token';
+        const adminTok = 'offline-admin-session-token';
         setToken(adminTok);
         localStorage.setItem('agriconnect_token', adminTok);
-        toast.success('Administrator clearance granted 🛡️');
+        toast.success('Clearance Verified. Welcome Chief Admin Bikram Dev! 🛡️');
         return DEMO_ADMIN;
       }
-      toast.error('Access Denied: Administrative credentials required.');
-      throw new Error('Access Denied.');
+      toast.error('Access Denied: Invalid administrator credentials.');
+      throw new Error('Access Denied: Invalid administrator credentials.');
     }
   };
 
@@ -170,20 +194,6 @@ export function AuthProvider({ children }) {
     throw new Error(res.message || 'Registration failed');
   };
 
-  // Switch to admin helper
-  const switchRole = async (role) => {
-    if (role === 'admin') {
-      try {
-        await adminLogin('admin@agriconnect.org', 'admin123');
-      } catch {
-        setUser(DEMO_ADMIN);
-        toast.success('Switched to Platform Administrator (Bikram Dev)', { icon: '🛡️' });
-      }
-    } else {
-      logout();
-    }
-  };
-
   // Logout
   const logout = () => {
     setUser(null);
@@ -213,9 +223,7 @@ export function AuthProvider({ children }) {
         adminLogin,
         registerFarmer,
         registerBuyer,
-        logout,
-        switchRole,
-        demoAdmin: DEMO_ADMIN
+        logout
       }}
     >
       {children}
